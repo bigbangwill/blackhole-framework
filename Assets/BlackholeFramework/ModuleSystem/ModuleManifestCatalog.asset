@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f92f1225f4156f469d8fa9d9decd8ce, type: 3}
+  m_Name: ModuleManifestCatalog
+  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.ModuleManifestCatalogSO
+  moduleManifests:
+  - {fileID: 11400000, guid: 9a49ae9d07074004e83ec50c62a9b0b5, type: 2}
+  - {fileID: 11400000, guid: 9ffca10480738aa489b0bd8d0db5b156, type: 2}
+  - {fileID: 11400000, guid: a1058e17ecbb21f499db97e88748195c, type: 2}
+  - {fileID: 11400000, guid: 93d74ac9dbd9352479dcef888a95b98f, type: 2}
+  - {fileID: 11400000, guid: 4acf8b3261fc0204e8491626bac67330, type: 2}
+  - {fileID: 11400000, guid: 6e169d462f1a2a04ab04efc4348fcb43, type: 2}
+  - {fileID: 11400000, guid: d451fd018f7a89a4bb28f34ca339e081, type: 2}
+  - {fileID: 11400000, guid: ba9894b71b05cfb4ebf1160025e7c648, type: 2}
+  - {fileID: 11400000, guid: 3fabe5db1856425c8e9862332d833596, type: 2}
+  - {fileID: 11400000, guid: 744b1e0cd2e3f2c48a2530cda8cc8df7, type: 2}
+  - {fileID: 11400000, guid: 95107bbf5760eec459b8d63aa3886099, type: 2}
+  - {fileID: 11400000, guid: b9474215f492d3540895df446ead5e04, type: 2}
+  - {fileID: 11400000, guid: 5a517cb4da97d974a8156b483b49ed16, type: 2}
+  - {fileID: 11400000, guid: 6fb560f797e6da048b7e7d968d99801c, type: 2}
+  - {fileID: 11400000, guid: c4dd2e433b37b274ca9ecfa4e50773ad, type: 2}

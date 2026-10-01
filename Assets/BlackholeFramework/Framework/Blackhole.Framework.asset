@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a15a9febb8f9d4d9baa309f12e0692, type: 3}
+  m_Name: Blackhole.Framework
+  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.ModuleManifestSO
+  moduleID: Blackhole.Framework
+  installer: {fileID: 11400000, guid: 8579dd23ccbb6244799cf41d5b574268, type: 2}
+  moduleScene: Assets/BlackholeFramework/Framework/BlackholeFrameworkScene.unity
+  isPersistant: 1
+  allowChildScopeOverride: 0
+  dependencies:
+  - {fileID: 11400000, guid: 5a517cb4da97d974a8156b483b49ed16, type: 2}
+  - {fileID: 11400000, guid: 3fabe5db1856425c8e9862332d833596, type: 2}

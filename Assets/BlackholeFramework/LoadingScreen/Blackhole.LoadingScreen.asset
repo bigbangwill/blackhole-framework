@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a15a9febb8f9d4d9baa309f12e0692, type: 3}
+  m_Name: Blackhole.LoadingScreen
+  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.ModuleManifestSO
+  moduleID: Blackhole.LoadingScreen
+  installer: {fileID: 11400000, guid: 3eee6a332f9079d45ab8d104fbe60905, type: 2}
+  moduleScene: Assets/BlackholeFramework/LoadingScreen/LoadingScene.unity
+  isPersistant: 0
+  allowChildScopeOverride: 0
+  dependencies:
+  - {fileID: 11400000, guid: b9474215f492d3540895df446ead5e04, type: 2}

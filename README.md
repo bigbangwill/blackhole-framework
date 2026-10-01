@@ -1,80 +1,78 @@
-# Blackhole Framework
+# Blackhole Framework development project
 
-Reusable Unity modules shared by Blackhole projects.
+This private repository is the source of truth for the Blackhole Framework. Open it as a complete Unity **6000.5.0f1** project, develop and test changes here, then distribute versioned `.unitypackage` releases to games.
 
-## Installation in another Unity project
+## Layout
 
-Use Unity **6000.5.0f1 or later**. The package declares Unity UI 2.5.0, Input System 1.19.0, and Universal RP 17.5.0. Composite Outline requires a URP render pipeline configured in the project.
+| Folder | Purpose |
+| --- | --- |
+| `Assets/BlackholeFramework` | Reusable framework code, module manifests, installers, settings, scenes, UI and third-party notices. This folder is exported. |
+| `Assets/FrameworkTests` | Development smoke module and Unity EditMode/PlayMode tests. Excluded from exports. |
+| `Assets/Editor/ProjectBootstrap` | Explicit dependency installation helper. Excluded from exports. |
+| `Assets/Settings`, `Assets/Scenes` | Development project's URP configuration and template scene. Excluded from exports. |
+| `Packages`, `ProjectSettings` | Pinned dependencies and reproducible Unity project settings. |
+| `scripts` | License-free, deterministic release exporter and its tests. |
 
-### 1. Install the external dependencies
+Generated folders (`Library`, `Temp`, `Logs`, `UserSettings`, `dist`) are ignored. There is no nested Git repository in the framework folder. The original package-only `v0.1.0` tag remains available; `v0.2.0` introduces this project structure.
 
-In Unity's Package Manager, choose **Add package from Git URL** for each dependency before importing Blackhole:
+## Develop locally
 
-```text
-https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.5.11
-https://github.com/hadashiA/VContainer.git?path=VContainer/Assets/VContainer#1.18.0
-```
+1. Clone this repository and open it with Unity 6000.5.0f1. Allow Package Manager to resolve the pinned Git/registry dependencies.
+2. Open `Assets/BlackholeFramework/Framework/BlackholeFrameworkScene.unity`. Enter Play Mode; the development smoke module should report successful startup. It exercises the module loader and audio-module dependency wiring without game audio or a backend login.
+3. Use **Window > General > Test Runner** to run EditMode and PlayMode tests. If development configuration needs rebuilding, run **Blackhole > Development > Configure Smoke Project**.
+4. Make reusable changes under `Assets/BlackholeFramework`. Put experiments, test modules and game-specific examples under `Assets/FrameworkTests`.
 
-Unity does not support Git URLs as dependencies inside a package's package.json. These dependencies must be installed in the consuming project; see [Unity's Git dependency documentation](https://docs.unity3d.com/Manual/upm-git.html). Newtonsoft.Json 13.0.4 is bundled with its MIT license; avoid importing another non-overridable Newtonsoft.Json.dll alongside it.
+The dependency installer is explicit; it does nothing on opening the project. It can be invoked in batch mode with `Blackhole.Development.Editor.PackageInstaller.Install` when bootstrapping or repairing dependency resolution.
 
-### 2. Import Blackhole
+## Release on a tag
 
-For normal development, clone the package as an **editable embedded package** into your new project's Packages folder before opening Unity:
+1. Update `Assets/BlackholeFramework/Version.json` and `CHANGELOG.md` to the same new semantic version. The framework folder's changelog should describe game migration steps.
+2. Run Unity EditMode/PlayMode tests, then the release checks:
 
 ```powershell
-git clone --branch v0.1.0 https://github.com/bigbangwill/blackhole-framework.git "<YourUnityProject>/Packages/com.bigbang.blackhole-framework"
+python -m unittest discover -s scripts -p "test_*.py" -v
+python scripts/export_unitypackage.py --tag v0.2.0 --output dist
 ```
 
-The repository is private. Authenticate Git with a GitHub account that has access, for example with `gh auth login` and `gh auth setup-git`.
+3. Commit and push the tested changes to `main`, then tag that commit:
 
-You can also use **Add package from Git URL**:
-
-```text
-https://github.com/bigbangwill/blackhole-framework.git#v0.1.0
+```powershell
+git tag -a v0.2.0 -m "Blackhole Framework 0.2.0"
+git push origin v0.2.0
 ```
 
-Git-installed packages live in Unity's cache and are read-only. This version stores editable project settings, a generated module catalog and installer settings inside the package. **Embed it before configuring or running the framework**: copy its package folder from Library/PackageCache to Packages/com.bigbang.blackhole-framework, excluding any .git folder. The embedded package takes precedence over the Git dependency. See [Unity's embedded-package documentation](https://docs.unity3d.com/Manual/upm-embed.html).
+Substitute the actual new version on subsequent releases; do not move or reuse published tags.
 
-### 3. Configure your game
+The **Release Blackhole Framework** GitHub Action runs on `v*` tag pushes. It verifies that the tag matches Version.json, runs exporter tests, checks metadata and references, exports the framework, and publishes a GitHub release with:
 
-1. Enable the Input System in **Project Settings > Player > Active Input Handling** (Input System Package or Both).
-2. Create a game module with **Assets > Create > Blackhole > Modules > Module Scaffold**, or supply your own manifest, installer and scene. Set the startup module to persistent and assign its required module dependencies.
-3. Select **Packages/com.bigbang.blackhole-framework/Framework/BlackholeProjectSettings.asset** and assign your game manifest to **Game Starting Module**.
-4. Set your authentication/server URLs if those modules are used. The distributed session token is empty and runtime login must supply it. Set a project-specific encryption key before saving encrypted data; do not change it after creating saves unless you migrate them.
-5. Populate **AudioPlayer/Settings/SoundLibrary.asset** with your own clips. It is intentionally empty; the framework mixer and mixer groups are included.
-6. Run **Blackhole > Framework > Refresh Module Configuration** after compilation finishes. This discovers your modules and updates Build Settings with the framework scene first and your starting module scene second.
-7. Open the framework startup scene and enter Play Mode.
+- `BlackholeFramework-<version>.unitypackage`
+- `SHA256SUMS.txt`
+- `package-inventory.json` listing exported assets and required dependencies
 
-The repository contains only the reusable package and its documentation. The original game's modules, startup selection, audio clips, saved login tokens, backend URLs and encryption key are excluded. Preserve your project configuration when updating an embedded copy.
+Prerelease tags such as `v0.3.0-preview.1` create prereleases. A manual workflow dispatch creates a downloadable Actions artifact without publishing a release. The action uses GitHub's built-in token with repository-content permission; no personal token or Unity license secret is required.
 
-## Asset ownership
+**The hosted workflows validate packaging; they do not run Unity compilation or PlayMode tests.** Run those locally before tagging. The exporter implements Unity's asset-archive layout with original asset GUIDs and metadata; preview thumbnails and Unity 6.6 package signatures are not added. Local Unity import validation is part of release verification.
 
-Each framework module has exactly one `ModuleManifestSO`, one `ModuleInstallerSO` asset and its settings inside `Packages/com.bigbang.blackhole-framework`. Manifests reference installers directly; installers reference their settings and required resources directly. There is no manually maintained installer registry, generated configuration copy or runtime resource-name lookup for module installation.
+## Clean release defaults
 
-Global dialogue UI documents, styles, textures and runtime theme, loading screen UI, the shared global style and fonts, and the audio mixer are inside the package alongside their scenes and settings. These defaults travel with the framework when it is imported into another project. The mixer is at `AudioPlayer/Settings/AudioPlayerMixer.mixer`; game-specific audio clips belong under the consuming project's Assets folder, outside Resources folders. Game-owned module manifests, installers and data remain in their game modules. Framework startup uses the package's `Framework/BlackholeFrameworkScene.unity`, project settings and module catalog.
+The exporter includes only `Assets/BlackholeFramework`. It preserves source files and `.meta` GUIDs while normalizing the archive's project configuration:
 
-Installers must remain stateless: use the supplied container builder and do not store containers, active sessions or created service instances on the installer asset.
+- Starting game module is unassigned; development manifests are removed from the generated catalog.
+- Sound library is empty; the reusable audio mixer remains included.
+- Saved authentication session and project backend URLs are blank.
+- Encryption settings use the documented placeholder; consumers must select their own key.
 
-`FrameworkInstaller` is a runtime module installer: it registers `FrameworkEntryPoint`, which loads the selected game starting module. It does not create or copy ScriptableObject assets. The former editor `FrameworkSetupAutoInstaller` and asset-copying setup are no longer used. Keep the runtime installer while startup registration is owned by the framework module manifest.
+Source settings are never modified by exporting. Unknown serialized asset references, credential-like values, old package paths, duplicate GUIDs, orphan metadata and missing metadata fail the export. Do not put unrelated project configuration or secrets in the reusable folder.
 
-## Refreshing configuration
+## Install in another game
 
-The editor refreshes the module catalog and build-scene list after asset import or script reload. New manifests are discovered automatically from Assets and packages; no hardcoded list of module classes needs updating.
+Download the `.unitypackage` from this repository's [Releases](https://github.com/bigbangwill/blackhole-framework/releases), install its external dependencies, and import it. Follow [the framework installation guide](Assets/BlackholeFramework/README.md) to configure the starting module, audio, server and storage settings.
 
-Use **Blackhole > Framework > Refresh Module Configuration**, or call:
+Each game tracks the imported copy in its own repository. Upgrades are manual imports: commit the game first, preserve its configured settings/installers/scenes in the import selection, review the resulting diff, remove obsolete files noted in the changelog, and test. Do not install the old UPM copy alongside this version.
 
-```csharp
-Blackhole.Framework.Composition.Editor.FrameworkProjectSetup.RegenerateSettings();
-```
+## References
 
-This only rediscovers manifests and refreshes catalog/build wiring. It does not clone assets, reset settings, recreate deleted configuration or overwrite installer resource assignments. Run it in Edit Mode after compilation/import finish. Batch-mode callers must invoke it explicitly.
-
-Framework project settings select the game's persistent starting module. The framework scene is build index zero; the starting module's scene is second. Module dependency references must all be assigned: missing dependencies fail with an actionable error instead of being silently skipped.
-
-## Reusing the framework
-
-This project uses an editable embedded package. Its settings and installers can therefore store direct references to game resources under Assets. The dialogue, loading screen, shared UI and mixer defaults need no separate asset import. Import/configure game resources (including audio clips) and select a starting module when using the framework in another project.
-
-These configured package assets are project changes: preserve them when updating the framework. Registry/Git cache packages are normally read-only; use an embedded editable package when configuring assets in place. Do not publish project credentials as shared package defaults.
-
-Unity UI and Input System are declared package dependencies. UniTask and VContainer must be available through the consuming project's registries or Git dependencies.
+- [Unity asset packages](https://docs.unity3d.com/Manual/AssetPackagesCreate.html)
+- [Unity asset metadata](https://docs.unity3d.com/Manual/AssetMetadata.html)
+- [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+- [Framework third-party notices](Assets/BlackholeFramework/Third%20Party%20Notices.md)

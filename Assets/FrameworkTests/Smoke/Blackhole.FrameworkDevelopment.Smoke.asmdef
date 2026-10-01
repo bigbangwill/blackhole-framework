@@ -1,0 +1,6 @@
+{
+  "name": "Blackhole.FrameworkDevelopment.Smoke",
+  "rootNamespace": "Blackhole.Development",
+  "references": ["Blackhole.ModuleSystem.Composition", "Blackhole.ModuleSystem.Contract", "Blackhole.SharedKernel.Composition", "UniTask", "VContainer"],
+  "autoReferenced": true
+}

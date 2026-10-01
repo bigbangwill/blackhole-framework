@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <Style src="project://database/Packages/com.bigbang.blackhole-framework/LoadingScreen/Scripts/Presentation/UI/LoadingScreenStyle.uss?fileID=7433441132597879392&amp;guid=d92dbf7f9a21f1b4f9dd2cab9bdc4ed3&amp;type=3#LoadingScreenStyle" />
-    <ui:VisualElement name="LoadingScreenRoot" class="loading-screen-root" picking-mode="Ignore">
-        <ui:VisualElement name="TransparentPanel" class="loading-screen-panel" />
-        <ui:VisualElement name="BlackPanel" class="loading-screen-panel" />
-    </ui:VisualElement>
-</ui:UXML>

@@ -1,0 +1,5 @@
+{
+  "name": "Blackhole.FrameworkDevelopment.PlayModeTests",
+  "references": ["Blackhole.FrameworkDevelopment.Smoke", "Blackhole.Framework.Composition", "Blackhole.ModuleSystem.Composition", "VContainer", "UniTask"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
