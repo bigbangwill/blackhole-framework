@@ -31,16 +31,20 @@ def collect_assets(project):
         if not meta.is_file():
             raise ValueError(f"Missing metadata: {meta.relative_to(project)}")
         asset = meta.with_suffix("")
-        if not asset.exists():
-            raise ValueError(f"Orphan metadata: {meta.relative_to(project)}")
         metadata = meta.read_bytes().replace(b"\r\n", b"\n")
+        folder = re.search(rb"^folderAsset: yes$", metadata, re.MULTILINE) is not None
+        # Git stores an empty Unity folder's .meta file but not the directory itself.
+        if not asset.exists() and not folder:
+            raise ValueError(f"Orphan metadata: {meta.relative_to(project)}")
+        if folder and asset.exists() and not asset.is_dir():
+            raise ValueError(f"Folder metadata points to a file: {meta.relative_to(project)}")
         match = GUID_PATTERN.search(metadata.decode("utf-8-sig"))
         if not match or match[1] in seen:
             raise ValueError(f"Invalid or duplicate GUID: {meta.relative_to(project)}")
         seen.add(match[1])
         if asset.is_symlink() or not asset.resolve().is_relative_to(root.resolve()):
             raise ValueError(f"Unsafe asset path: {asset.relative_to(project)}")
-        result.append((asset.relative_to(project).as_posix(), match[1], metadata, None if asset.is_dir() else asset.read_bytes()))
+        result.append((asset.relative_to(project).as_posix(), match[1], metadata, None if folder or asset.is_dir() else asset.read_bytes()))
     for asset in root.rglob("*"):
         if asset.name == ".signature.p7s":
             continue  # NuGet's signing envelope is not imported as a Unity asset.

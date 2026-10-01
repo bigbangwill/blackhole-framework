@@ -53,6 +53,20 @@ class PackageExportTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "duplicate GUID"):
                 collect_assets(root)
 
+    def test_git_checkout_preserves_empty_unity_folders_and_rejects_orphan_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            framework = root / "Assets/BlackholeFramework"
+            framework.mkdir(parents=True)
+            framework.with_suffix(".meta").write_text("guid: " + "a" * 32 + "\nfolderAsset: yes\n")
+            (framework / "Empty.meta").write_text("guid: " + "b" * 32 + "\nfolderAsset: yes\n")
+            assets = collect_assets(root)
+            self.assertEqual(assets[1][0], "Assets/BlackholeFramework/Empty")
+            self.assertIsNone(assets[1][3])
+            (framework / "Missing.cs.meta").write_text("guid: " + "c" * 32 + "\n")
+            with self.assertRaisesRegex(ValueError, "Orphan metadata"):
+                collect_assets(root)
+
     def test_release_is_reproducible_and_contains_unity_archive_entries(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
