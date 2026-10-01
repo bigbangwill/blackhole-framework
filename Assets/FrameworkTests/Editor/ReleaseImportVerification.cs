@@ -9,24 +9,6 @@ namespace Blackhole.Development.Editor
     /// <summary>Runs against a separate clean project, never the development source.</summary>
     public static class ReleaseImportVerification
     {
-        public static void ImportBatch()
-        {
-            try
-            {
-                string package = Environment.GetEnvironmentVariable("BLACKHOLE_IMPORT_PACKAGE");
-                if (string.IsNullOrWhiteSpace(package) || !File.Exists(package)) throw new InvalidOperationException("Set BLACKHOLE_IMPORT_PACKAGE to the release archive path.");
-                AssetDatabase.importPackageCompleted += name =>
-                {
-                    Debug.Log("Blackhole release archive imported into the clean verification project.");
-                    EditorApplication.delayCall += () => EditorApplication.Exit(0);
-                };
-                AssetDatabase.importPackageFailed += (name, error) => { Debug.LogError(error); EditorApplication.Exit(1); };
-                AssetDatabase.importPackageCancelled += name => { Debug.LogError("Release import was cancelled."); EditorApplication.Exit(1); };
-                AssetDatabase.ImportPackage(package, false);
-            }
-            catch (Exception exception) { Debug.LogException(exception); EditorApplication.Exit(1); }
-        }
-
         public static void VerifyBatch()
         {
             try
