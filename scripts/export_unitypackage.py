@@ -24,7 +24,7 @@ def collect_assets(project):
     root = project / FRAMEWORK_PATH
     if not root.is_dir():
         raise ValueError(f"Missing framework folder: {FRAMEWORK_PATH}")
-    metas = [root.with_suffix(".meta"), *sorted(root.rglob("*.meta"))]
+    metas = [root.with_suffix(".meta"), *sorted(root.rglob("*.meta"), key=lambda path: path.relative_to(root).as_posix())]
     result = []
     seen = set()
     for meta in metas:

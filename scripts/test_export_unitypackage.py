@@ -59,9 +59,10 @@ class PackageExportTests(unittest.TestCase):
             framework = root / "Assets/BlackholeFramework"
             framework.mkdir(parents=True)
             framework.with_suffix(".meta").write_text("guid: " + "a" * 32 + "\nfolderAsset: yes\n")
-            (framework / "Empty.meta").write_text("guid: " + "b" * 32 + "\nfolderAsset: yes\n")
+            (framework / "ZEmpty.meta").write_text("guid: " + "b" * 32 + "\nfolderAsset: yes\n")
+            (framework / "aEmpty.meta").write_text("guid: " + "d" * 32 + "\nfolderAsset: yes\n")
             assets = collect_assets(root)
-            self.assertEqual(assets[1][0], "Assets/BlackholeFramework/Empty")
+            self.assertEqual(assets[1][0], "Assets/BlackholeFramework/ZEmpty")
             self.assertIsNone(assets[1][3])
             (framework / "Missing.cs.meta").write_text("guid: " + "c" * 32 + "\n")
             with self.assertRaisesRegex(ValueError, "Orphan metadata"):

@@ -14,6 +14,7 @@ namespace Blackhole.Development.Editor
             try
             {
                 const string root = "Assets/BlackholeFramework";
+                AssetDatabase.ImportAsset(root, ImportAssetOptions.ImportRecursive | ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
                 SerializedObject settings = new(AssetDatabase.LoadMainAssetAtPath(root + "/Framework/BlackholeProjectSettings.asset"));
                 if (settings.FindProperty("startingModule").objectReferenceValue != null) throw new InvalidOperationException("Release contains a development starting module.");
                 SerializedObject library = new(AssetDatabase.LoadMainAssetAtPath(root + "/AudioPlayer/Settings/SoundLibrary.asset"));
