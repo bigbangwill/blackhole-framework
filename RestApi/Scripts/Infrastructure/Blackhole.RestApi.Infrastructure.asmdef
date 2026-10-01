@@ -1,0 +1,18 @@
+{
+    "name": "Blackhole.RestApi.Infrastructure",
+    "rootNamespace": "Blackhole.RestApi.Infrastructure",
+    "references": [
+        "GUID:798cbce3cc9e453bb86b865d9dbacc65",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

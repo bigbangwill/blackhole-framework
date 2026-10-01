@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4213cb2e8947d914aab08ba77a1a1cc6, type: 3}
+  m_Name: FromTop
+  m_EditorClassIdentifier: BigBang.UIToolkitComponent::BigBang.UIToolkitComponent.PanelTransitionProfileSO
+  styleSheet: {fileID: 7433441132597879392, guid: 3432bb614d6ec1545a6d35c6aa1372de, type: 3}
+  baseClass: panel-transition-from-top
+  hiddenClass: panel-hidden
+  visibleClass: panel-visible
+  closeDurationMs: 250
+  setDisplayNoneAfterClose: 1

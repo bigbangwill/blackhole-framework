@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.LoadingScreen.Infrastructure",
+    "rootNamespace": "Blackhole.LoadingScreen.Infrastructure",
+    "references": [
+        "GUID:a34f3fbeca684ab8867ce029ae9b105c",
+        "GUID:8513741ad7394bf589e9c3b6f609bba1",
+        "GUID:e0b942aa34d3468786f70ddf67d811b1",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

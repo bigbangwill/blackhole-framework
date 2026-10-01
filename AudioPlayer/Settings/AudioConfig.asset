@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a9d297542399124aad157088834de47, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: Blackhole.AudioPlayer.Infrastructure::Blackhole.AudioPlayer.Infrastructure.ScriptableObjects.AudioConfigSO
+  _sfxChannelCount: 6
+  _musicChannelCount: 1
+  masterVolumeParameter: MasterVolume
+  musicVolumeParameter: MusicVolume
+  sfxVolumeParameter: SFXVolume
+  settingsKey: audio_settings

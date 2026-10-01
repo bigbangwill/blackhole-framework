@@ -1,0 +1,24 @@
+{
+    "name": "Blackhole.SceneLoader.Composition",
+    "rootNamespace": "Blackhole.SceneLoader.Composition",
+    "references": [
+        "GUID:51a50a3e966c4d9f992220fdf3a30bd6",
+        "GUID:ffc2a43775334dc4b881b619108a3a1a",
+        "GUID:2010c7c88c874118b5020d83b5c86bf6",
+        "GUID:f2052b07480c4d048e2ddbbc86e47dc9",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:88d08ce6e75807546b9f966c928b6a59",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

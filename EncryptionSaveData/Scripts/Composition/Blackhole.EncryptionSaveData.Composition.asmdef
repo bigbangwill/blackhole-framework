@@ -1,0 +1,23 @@
+{
+    "name": "Blackhole.EncryptionSaveData.Composition",
+    "rootNamespace": "Blackhole.EncryptionSaveData.Composition",
+    "references": [
+        "GUID:34f6ac42a2bc416093af7188a8581fe6",
+        "GUID:881d98f402ce4aeca9be26d3e5c480c2",
+        "GUID:496cf5d27a0748e5b1ef2c45bffac19e",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:4eaf22fe742b410bb785c005ff0cd9b2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

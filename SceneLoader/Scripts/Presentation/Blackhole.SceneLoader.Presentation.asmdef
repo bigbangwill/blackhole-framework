@@ -1,0 +1,17 @@
+{
+    "name": "Blackhole.SceneLoader.Presentation",
+    "rootNamespace": "Blackhole.SceneLoader.Presentation",
+    "references": [
+        "GUID:51a50a3e966c4d9f992220fdf3a30bd6",
+        "GUID:ffc2a43775334dc4b881b619108a3a1a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

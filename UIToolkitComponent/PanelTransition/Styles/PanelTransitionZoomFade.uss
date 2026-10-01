@@ -1,0 +1,17 @@
+.panel-transition-zoom-fade {
+    opacity: 1;
+    scale: 1 1;
+    transition-property: opacity, scale;
+    transition-duration: 250ms, 250ms;
+    transition-timing-function: ease-out, ease-out;
+}
+
+.panel-transition-zoom-fade.panel-hidden {
+    opacity: 0;
+    scale: 1.1 1.1;
+}
+
+.panel-transition-zoom-fade.panel-visible {
+    opacity: 1;
+    scale: 1 1;
+}

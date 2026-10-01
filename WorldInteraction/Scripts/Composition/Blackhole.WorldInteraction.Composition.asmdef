@@ -1,0 +1,23 @@
+{
+    "name": "Blackhole.WorldInteraction.Composition",
+    "rootNamespace": "Blackhole.WorldInteraction.Composition",
+    "references": [
+        "GUID:10d964551bd848b4875abcf4f8bc8724",
+        "GUID:0518e0a73b5d4dc283c86fccd58bc96b",
+        "GUID:ea686deeea9c4be68ce58bf0fa9460f5",
+        "GUID:5cfcaffd275b4f48a32878eb5541c502",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

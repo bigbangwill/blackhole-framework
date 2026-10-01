@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3a6522899b2e54cbda2672678dafc4, type: 3}
+  m_Name: NotificationSettingsSO
+  m_EditorClassIdentifier: Blackhole.GlobalDialogue.Presentation::Blackhole.GlobalDialogue.Presentation.NotificationSettings
+  _toasts_setting:
+  - type: 0
+    backgroundColor: {r: 0.8773585, g: 0.81000674, b: 0.23589355, a: 1}
+    showTimer: 2
+  - type: 1
+    backgroundColor: {r: 1, g: 0, b: 0, a: 1}
+    showTimer: 4
+  - type: 2
+    backgroundColor: {r: 0.5026338, g: 0.9056604, b: 0.23495908, a: 1}
+    showTimer: 3
+  - type: 3
+    backgroundColor: {r: 0.22579211, g: 0.7497869, b: 0.8113208, a: 1}
+    showTimer: 4

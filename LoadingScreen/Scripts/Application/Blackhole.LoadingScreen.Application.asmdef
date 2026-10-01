@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.LoadingScreen.Application",
+    "rootNamespace": "Blackhole.LoadingScreen.Application",
+    "references": [
+        "GUID:a34f3fbeca684ab8867ce029ae9b105c",
+        "GUID:8513741ad7394bf589e9c3b6f609bba1",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

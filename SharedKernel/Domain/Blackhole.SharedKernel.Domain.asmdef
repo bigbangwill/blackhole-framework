@@ -1,0 +1,14 @@
+{
+    "name": "Blackhole.SharedKernel.Domain",
+    "rootNamespace": "Blackhole.SharedKernel.Domain",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

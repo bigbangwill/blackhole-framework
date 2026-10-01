@@ -1,0 +1,20 @@
+{
+    "name": "Blackhole.EncryptionSaveData.Infrastructure",
+    "rootNamespace": "Blackhole.EncryptionSaveData.Infrastructure",
+    "references": [
+        "GUID:34f6ac42a2bc416093af7188a8581fe6",
+        "GUID:881d98f402ce4aeca9be26d3e5c480c2",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:dde55c0e8aca4d040a474f2082fb5534"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

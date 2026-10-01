@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.SceneLoader.Infrastructure",
+    "rootNamespace": "Blackhole.SceneLoader.Infrastructure",
+    "references": [
+        "GUID:51a50a3e966c4d9f992220fdf3a30bd6",
+        "GUID:ffc2a43775334dc4b881b619108a3a1a",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

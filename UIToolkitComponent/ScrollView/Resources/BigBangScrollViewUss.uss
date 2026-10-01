@@ -1,0 +1,55 @@
+.bigbang-scroll-view {
+    flex-grow: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.bigbang-scroll-view__viewport {
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.bigbang-scroll-view__content {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.bigbang-scroll-view--vertical.bigbang-scroll-view--start-from-bottom .bigbang-scroll-view__content {
+    min-height: 100%;
+    justify-content: flex-end;
+}
+
+.bigbang-scroll-view__scrollbar {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bigbang-scroll-view__thumb {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.38);
+    border-radius: 10px;
+}
+
+.bigbang-scroll-view--vertical .bigbang-scroll-view__scrollbar {
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    width: 10px;
+}
+
+.bigbang-scroll-view--horizontal .bigbang-scroll-view__scrollbar {
+    left: 6px;
+    right: 6px;
+    bottom: 4px;
+    height: 5px;
+}
+
+.bigbang-scroll-view--hidden-scrollbar .bigbang-scroll-view__scrollbar {
+    display: none;
+}

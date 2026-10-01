@@ -1,0 +1,17 @@
+{
+    "name": "Blackhole.AudioPlayer.Application",
+    "rootNamespace": "Blackhole.AudioPlayer.Application",
+    "references": [
+        "GUID:14bff9187a1b425ba2277f741eddf406",
+        "GUID:6dbc3246747544c6be7ae131ee084020"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

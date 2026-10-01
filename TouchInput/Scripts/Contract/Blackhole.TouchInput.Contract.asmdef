@@ -1,0 +1,14 @@
+{
+    "name": "Blackhole.TouchInput.Contract",
+    "rootNamespace": "Blackhole.TouchInput.Contract",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

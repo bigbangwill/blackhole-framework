@@ -1,0 +1,16 @@
+{
+    "name": "Blackhole.SharedKernel.Application",
+    "rootNamespace": "Blackhole.SharedKernel.Application",
+    "references": [
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

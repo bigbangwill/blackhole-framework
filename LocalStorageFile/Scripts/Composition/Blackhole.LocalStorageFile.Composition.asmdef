@@ -1,0 +1,22 @@
+{
+    "name": "Blackhole.LocalStorageFile.Composition",
+    "rootNamespace": "Blackhole.LocalStorageFile.Composition",
+    "references": [
+        "GUID:4eaf22fe742b410bb785c005ff0cd9b2",
+        "GUID:bea6ea15b7de419c9129e9a63215c557",
+        "GUID:3edaa113cd684831a8668ab64cd869a0",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,76 @@
+:root {
+}
+
+.global-big-button {
+    --normal-background-color: rgb(232, 218, 205);
+    --normal-tint-color: rgb(255, 255, 255);
+    --pressed-tint-color: rgb(123, 123, 123);
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-left-color: rgb(163, 143, 124);
+    border-right-color: rgb(163, 143, 124);
+    border-top-color: rgb(163, 143, 124);
+    border-bottom-color: rgb(163, 143, 124);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+
+.global-font {
+    -unity-font-definition: url("project://database/Packages/com.bigbang.blackhole-framework/SharedKernel/Presentaition/Fonts/IRANSans(FaNum)_Black.ttf?fileID=12800000&guid=b3f4a590c68d1544b9b12c21752674c1&type=3#IRANSans(FaNum)_Black");
+    -unity-text-align: upper-right;
+}
+
+.global-small-button {
+    --normal-background-color: rgb(232, 218, 205);
+    --normal-tint-color: rgb(255, 255, 255);
+    --pressed-tint-color: rgb(123, 123, 123);
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    align-self: center;
+    border-left-color: rgb(163, 143, 124);
+    border-right-color: rgb(163, 143, 124);
+    border-top-color: rgb(163, 143, 124);
+    border-bottom-color: rgb(163, 143, 124);
+    border-top-width: 7px;
+    border-right-width: 7px;
+    border-bottom-width: 7px;
+    border-left-width: 7px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    aspect-ratio: 1;
+    height: 105px;
+}
+
+.global-top-holder {
+    flex-grow: 0;
+    width: 100%;
+    height: 10%;
+    flex-direction: row-reverse;
+    margin-top: 20px;
+    position: absolute;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    justify-content: flex-start;
+}

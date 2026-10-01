@@ -1,0 +1,16 @@
+{
+    "name": "Blackhole.TouchInput.Presentation",
+    "rootNamespace": "Blackhole.TouchInput.Presentation",
+    "references": [
+        "GUID:8429995826886b74a850fd2661ea60d6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

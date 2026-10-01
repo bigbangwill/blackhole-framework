@@ -1,0 +1,14 @@
+{
+    "name": "Blackhole.CompositeOutline",
+    "rootNamespace": "Blackhole.CompositeOutline",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

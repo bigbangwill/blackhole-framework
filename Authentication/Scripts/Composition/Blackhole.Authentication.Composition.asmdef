@@ -1,0 +1,24 @@
+{
+    "name": "Blackhole.Authentication.Composition",
+    "rootNamespace": "Blackhole.Authentication.Composition",
+    "references": [
+        "GUID:461ba24f7e3f450b8dee089b599cffe6",
+        "GUID:b7c26aef3beb406e9134e448300bd06a",
+        "GUID:5f182cd3f78ca2142b5b30e1df6c56b3",
+        "GUID:0bcf18db352448eab165ca9923044f76",
+        "GUID:798cbce3cc9e453bb86b865d9dbacc65",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

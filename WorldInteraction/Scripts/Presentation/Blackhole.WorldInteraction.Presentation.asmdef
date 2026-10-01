@@ -1,0 +1,20 @@
+{
+    "name": "Blackhole.WorldInteraction.Presentation",
+    "rootNamespace": "Blackhole.WorldInteraction.Presentation",
+    "references": [
+        "GUID:10d964551bd848b4875abcf4f8bc8724",
+        "GUID:0518e0a73b5d4dc283c86fccd58bc96b",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:62ed2ee3fe25efd4fbc08158289853af",
+        "GUID:14bff9187a1b425ba2277f741eddf406"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

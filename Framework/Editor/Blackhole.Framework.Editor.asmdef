@@ -1,0 +1,21 @@
+{
+    "name": "Blackhole.Framework.Editor",
+    "rootNamespace": "Blackhole.Framework.Editor",
+    "references": [
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:506606b845a53e142b1cabc60258c45e",
+        "GUID:86632267d9fa4abe9c7e80f321272cf6"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

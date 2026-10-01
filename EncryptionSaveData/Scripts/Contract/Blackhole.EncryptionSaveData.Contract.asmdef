@@ -1,0 +1,16 @@
+{
+    "name": "Blackhole.EncryptionSaveData.Contract",
+    "rootNamespace": "Blackhole.EncryptionSaveData.Contract",
+    "references": [
+        "GUID:4eaf22fe742b410bb785c005ff0cd9b2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

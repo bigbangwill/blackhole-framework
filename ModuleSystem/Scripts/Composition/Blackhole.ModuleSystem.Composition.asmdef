@@ -1,0 +1,21 @@
+{
+    "name": "Blackhole.ModuleSystem.Composition",
+    "rootNamespace": "Blackhole.ModuleSystem.Composition",
+    "references": [
+        "GUID:96391bfc9a79431880148d8df900319c",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:51a50a3e966c4d9f992220fdf3a30bd6",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

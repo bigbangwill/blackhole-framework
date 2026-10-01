@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.GlobalDialogue.Infrastructure",
+    "rootNamespace": "Blackhole.GlobalDialogue.Infrastructure",
+    "references": [
+        "GUID:bd3e3ccb3f574fc785a5253e817758f8",
+        "GUID:b9ec32644b184507bafd677413bac79d",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:dde55c0e8aca4d040a474f2082fb5534"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

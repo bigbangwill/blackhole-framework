@@ -1,0 +1,16 @@
+{
+    "name": "Blackhole.Settings.Editor",
+    "rootNamespace": "Blackhole.Settings.Editor",
+    "references": [
+        "GUID:dde55c0e8aca4d040a474f2082fb5534"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

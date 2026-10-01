@@ -1,0 +1,20 @@
+{
+    "name": "Blackhole.GlobalDialogue.Application",
+    "rootNamespace": "Blackhole.GlobalDialogue.Application",
+    "references": [
+        "GUID:bd3e3ccb3f574fc785a5253e817758f8",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

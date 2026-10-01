@@ -1,0 +1,11 @@
+.animated-button {
+    transition-property: scale, background-color;
+    transition-duration: 80ms, 80ms;
+    transition-timing-function: ease-out, ease-out;
+    background-color: rgb(197, 197, 197);
+}
+
+.animated-button-clicked {
+    scale: 0.9 0.9 0.9;
+    -unity-background-image-tint-color: rgb(123, 123, 123);
+}

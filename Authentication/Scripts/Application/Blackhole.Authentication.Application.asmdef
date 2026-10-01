@@ -1,0 +1,22 @@
+{
+    "name": "Blackhole.Authentication.Application",
+    "rootNamespace": "Blackhole.Authentication.Application",
+    "references": [
+        "GUID:461ba24f7e3f450b8dee089b599cffe6",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:798cbce3cc9e453bb86b865d9dbacc65",
+        "GUID:9910c98e5c46078418f2cec385cf9be9",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:4eaf22fe742b410bb785c005ff0cd9b2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

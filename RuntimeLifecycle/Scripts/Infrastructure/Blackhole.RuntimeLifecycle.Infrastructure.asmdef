@@ -1,0 +1,17 @@
+{
+    "name": "Blackhole.RuntimeLifecycle.Infrastructure",
+    "rootNamespace": "Blackhole.RuntimeLifecycle.Infrastructure",
+    "references": [
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:e779237c386616a41a524081731ed8c0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

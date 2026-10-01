@@ -1,0 +1,24 @@
+{
+    "name": "Blackhole.RestApiSets.Composition",
+    "rootNamespace": "Blackhole.RestApiSets.Composition",
+    "references": [
+        "GUID:e23829b36b384ee88e1eec823712ec77",
+        "GUID:184fb505052c4d578f453c50573084b1",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:461ba24f7e3f450b8dee089b599cffe6",
+        "GUID:798cbce3cc9e453bb86b865d9dbacc65",
+        "GUID:dde55c0e8aca4d040a474f2082fb5534"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

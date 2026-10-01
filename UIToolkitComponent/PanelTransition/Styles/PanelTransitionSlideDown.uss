@@ -1,0 +1,17 @@
+.panel-transition-slide-down {
+    opacity: 1;
+    translate: 0 0;
+    transition-property: opacity, translate;
+    transition-duration: 250ms, 250ms;
+    transition-timing-function: ease-out, ease-out;
+}
+
+.panel-transition-slide-down.panel-hidden {
+    opacity: 0;
+    translate: 0 8%;
+}
+
+.panel-transition-slide-down.panel-visible {
+    opacity: 1;
+    translate: 0 0;
+}

@@ -1,0 +1,53 @@
+:root {
+}
+
+#Root.ori-landscape #DialouguePanel {
+    width: 60%;
+    height: 64%;
+    top: 6%;
+    align-self: center;
+    border-top-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 4px;
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
+    border-bottom-right-radius: 70px;
+    border-bottom-left-radius: 70px;
+    border-left-color: rgb(163, 143, 124);
+    border-right-color: rgb(163, 143, 124);
+    border-top-color: rgb(163, 143, 124);
+    border-bottom-color: rgb(163, 143, 124);
+}
+
+#Root.ori-landscape #DetailLabel {
+    width: 90%;
+    align-self: center;
+    -unity-text-align: upper-right;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-left: 0;
+    padding-bottom: 10px;
+    top: auto;
+    height: 90%;
+    margin-top: 20px;
+    margin-left: 0;
+}
+
+#Root.ori-landscape #Holder {
+    width: 80%;
+    align-self: center;
+    -unity-text-align: upper-right;
+    height: 70%;
+    top: 15%;
+    padding-top: 100px;
+}
+
+#Root.ori-landscape #Holder #ButtonsHolder {
+    width: 40%;
+    align-self: center;
+    -unity-text-align: upper-right;
+    top: auto;
+    height: 20%;
+    margin-top: 30px;
+}

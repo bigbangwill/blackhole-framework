@@ -1,0 +1,18 @@
+{
+    "name": "Blackhole.WorldInteraction.Application",
+    "rootNamespace": "Blackhole.WorldInteraction.Application",
+    "references": [
+        "GUID:10d964551bd848b4875abcf4f8bc8724",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:62ed2ee3fe25efd4fbc08158289853af"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

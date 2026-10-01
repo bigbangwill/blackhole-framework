@@ -1,0 +1,23 @@
+{
+    "name": "Blackhole.AudioPlayer.Infrastructure",
+    "rootNamespace": "Blackhole.AudioPlayer.Infrastructure",
+    "references": [
+        "GUID:14bff9187a1b425ba2277f741eddf406",
+        "GUID:6dbc3246747544c6be7ae131ee084020",
+        "GUID:c1b462f8a7b541858b880eba68461ea7",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:4eaf22fe742b410bb785c005ff0cd9b2",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:dde55c0e8aca4d040a474f2082fb5534"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
