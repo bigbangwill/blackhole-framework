@@ -1,0 +1,21 @@
+{
+    "name": "Blackhole.Messaging.Infrastructure",
+    "rootNamespace": "Blackhole.Messaging.Infrastructure",
+    "references": [
+        "GUID:8785ed54db914f3194a8e07905ad520d",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:dde55c0e8aca4d040a474f2082fb5534",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:08b38f39e2d9e594389b7a4cf4c2c338"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

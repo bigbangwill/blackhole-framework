@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 - 2026-10-19
+
+- Add standalone Messaging contracts, MessagePipe adapters, module assets and dependency injection registration.
+- Pin MessagePipe and its VContainer integration to the imported project revision; keep the existing Unity, UniTask and VContainer versions.
+- Add Root Module and Persistent Root scaffolding with generated startup entry points and automatic LifetimeScope registration.
+- Complete scene wiring after compilation and protect generated scopes against VContainer template replacement.
+- Store full scene paths in generated manifests and remove the redundant starting-scene inspector preview.
+
+### Migration
+
+Install the two pinned MessagePipe Git dependencies listed in Version.json before importing this release. Add Blackhole.Messaging to a module's dependencies when it uses IEventPublisher<T> or IEventSubscriber<T>. Keep configured project settings and the starting module when upgrading. Root Module scaffolding now generates and registers the startup entry point automatically. This release does not include the experimental Networking module, Unity Transport, or game lesson/demo code.
+
 ## 0.2.0 - 2026-10-01
 
 - Convert the private repository into a complete Unity 6000.5.0f1 framework development project.

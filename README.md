@@ -24,6 +24,10 @@ Generated folders (`Library`, `Temp`, `Logs`, `UserSettings`, `dist`) are ignore
 
 The dependency installer is explicit; it does nothing on opening the project. It can be invoked in batch mode with `Blackhole.Development.Editor.PackageInstaller.Install` when bootstrapping or repairing dependency resolution.
 
+## Current framework update
+
+Version 0.3.0 adds standalone in-process Messaging and automatic root-module scaffolding. MessagePipe and MessagePipe.VContainer are pinned to a specific Git revision in Packages/manifest.json, Version.json and the dependency installer. Unity 6000.5.0f1 and the existing UniTask/VContainer versions remain unchanged. Experimental Networking, Unity Transport and game lesson/demo modules are excluded.
+
 ## Release on a tag
 
 1. Update `Assets/BlackholeFramework/Version.json` and `CHANGELOG.md` to the same new semantic version. The framework folder's changelog should describe game migration steps.
@@ -31,14 +35,14 @@ The dependency installer is explicit; it does nothing on opening the project. It
 
 ```powershell
 python -m unittest discover -s scripts -p "test_*.py" -v
-python scripts/export_unitypackage.py --tag v0.2.0 --output dist
+python scripts/export_unitypackage.py --tag v0.3.0 --output dist
 ```
 
 3. Commit and push the tested changes to `main`, then tag that commit:
 
 ```powershell
-git tag -a v0.2.0 -m "Blackhole Framework 0.2.0"
-git push origin v0.2.0
+git tag -a v0.3.0 -m "Blackhole Framework 0.3.0"
+git push origin v0.3.0
 ```
 
 Substitute the actual new version on subsequent releases; do not move or reuse published tags.

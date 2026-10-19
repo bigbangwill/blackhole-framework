@@ -19,6 +19,7 @@ namespace Blackhole.Editor
         private const string SettingsContractAssemblyName = "Blackhole.Settings.Contract";
         private const string UniTaskAssemblyName = "UniTask";
         private const string VContainerAssemblyName = "VContainer";
+        private const string ModuleSystemCompositionAssemblyName = "Blackhole.ModuleSystem.Composition";
 
         private readonly Dictionary<ModuleLayer, bool> selectedLayers = new Dictionary<ModuleLayer, bool>
         {
@@ -37,6 +38,8 @@ namespace Blackhole.Editor
         private bool createScene;
         private bool createManifest = true;
         private bool createSettings = true;
+        private bool isRootModule;
+        private bool persistentRootModule;
         private Vector2 scrollPosition;
 
         [MenuItem("Assets/Create/Blackhole/Modules/Module Scaffold", false, 80)]
@@ -75,9 +78,18 @@ namespace Blackhole.Editor
 
             EditorGUILayout.Space(8f);
             EditorGUILayout.LabelField("Module Assets", EditorStyles.boldLabel);
-            createScene = EditorGUILayout.ToggleLeft(
-                new GUIContent("Create Scene", "Create an empty scene in the module folder and add it to Build Settings."),
-                createScene);
+            isRootModule = EditorGUILayout.ToggleLeft(new GUIContent("Root Module", "Generate a LifetimeScope and RootModuleStartup entry point and wire them into the module scene after compilation."), isRootModule);
+            if (isRootModule)
+            {
+                createScene = true;
+                createManifest = true;
+                selectedLayers[ModuleLayer.Composition] = true;
+                persistentRootModule = EditorGUILayout.ToggleLeft(new GUIContent("Persistent Root", "Enable this for the game starting module, which stays loaded while other game roots load beneath it."), persistentRootModule);
+                EditorGUILayout.HelpBox("Root modules include a scene, manifest, Composition layer, LifetimeScope and startup entry point. Scene wiring finishes after scripts compile.", MessageType.Info);
+            }
+
+            using (new EditorGUI.DisabledScope(isRootModule))
+                createScene = EditorGUILayout.ToggleLeft(new GUIContent("Create Scene", "Create an empty scene in the module folder and add it to Build Settings."), createScene);
             if (createScene)
             {
                 using (new EditorGUI.IndentLevelScope())
@@ -86,9 +98,8 @@ namespace Blackhole.Editor
                 }
             }
 
-            createManifest = EditorGUILayout.ToggleLeft(
-                new GUIContent("Create Module Manifest", "Create and register a ModuleManifestSO for this module."),
-                createManifest);
+            using (new EditorGUI.DisabledScope(isRootModule))
+                createManifest = EditorGUILayout.ToggleLeft(new GUIContent("Create Module Manifest", "Create and register a ModuleManifestSO for this module."), createManifest);
 
             createSettings = EditorGUILayout.ToggleLeft(
                 new GUIContent("Create Settings", "Create a module-specific ScriptableObject class and asset without registering it."),
@@ -144,7 +155,8 @@ namespace Blackhole.Editor
 
         private void DrawLayerToggle(ModuleLayer layer, string label, string tooltip)
         {
-            selectedLayers[layer] = EditorGUILayout.ToggleLeft(new GUIContent(label, tooltip), selectedLayers[layer]);
+            using (new EditorGUI.DisabledScope(isRootModule && layer == ModuleLayer.Composition))
+                selectedLayers[layer] = EditorGUILayout.ToggleLeft(new GUIContent(label, tooltip), selectedLayers[layer]);
         }
 
         private void ApplySelectionAsTargetPath()
@@ -214,6 +226,9 @@ namespace Blackhole.Editor
 
             if (selectedLayers[ModuleLayer.Composition])
                 CreateInstallerScaffold();
+
+            if (isRootModule)
+                CreateRootModuleScaffold();
 
             if (manifest != null)
             {
@@ -353,6 +368,9 @@ namespace Blackhole.Editor
             {
                 yield return vContainer.Guid;
             }
+
+            if (isRootModule && layer == ModuleLayer.Composition && existingAssemblies.TryGetValue(ModuleSystemCompositionAssemblyName, out var moduleSystemComposition))
+                yield return moduleSystemComposition.Guid;
         }
 
         private IEnumerable<string> GetLayerGuid(ModuleLayer layer, IReadOnlyDictionary<ModuleLayer, string> layerGuids, IReadOnlyDictionary<string, AssemblyInfo> existingAssemblies)
@@ -444,12 +462,15 @@ namespace Blackhole.Editor
 
             var serializedManifest = new SerializedObject(manifest);
             serializedManifest.FindProperty("moduleID").stringValue = assemblyRoot;
-            serializedManifest.FindProperty("moduleScene").stringValue = createScene ? sceneName : string.Empty;
+            serializedManifest.FindProperty("moduleScene").stringValue = createScene ? GetSceneAssetPath() : string.Empty;
             if (isNewManifest)
             {
                 serializedManifest.FindProperty("isPersistant").boolValue = false;
                 serializedManifest.FindProperty("dependencies").arraySize = 0;
             }
+
+            if (isRootModule)
+                serializedManifest.FindProperty("isPersistant").boolValue = persistentRootModule;
 
             serializedManifest.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(manifest);
@@ -503,6 +524,9 @@ namespace Blackhole.Editor
                 createdItems.Add("unregistered settings class and asset");
             }
 
+            if (isRootModule)
+                createdItems.Add("root LifetimeScope and startup entry point (scene wiring completes after compilation)");
+
             return $"Created {assemblyRoot} at {modulePath}.\n\nIncluded: {string.Join(", ", createdItems)}.";
         }
 
@@ -537,6 +561,71 @@ namespace Blackhole.Editor
             }
 
             PendingModuleInstallerAssetCreator.Queue(installerTypeName, $"{assetFolder}/{installerName}.asset", createManifest ? GetManifestAssetPath() : null);
+        }
+
+        private void CreateRootModuleScaffold()
+        {
+            string moduleName = SuggestFolderName(assemblyRoot);
+            string scopeName = $"{moduleName}LifetimeScope";
+            string entryPointName = $"{moduleName}EntryPoint";
+            string compositionPath = $"{GetModuleAssetPath()}/Scripts/Composition";
+            string entryPointPath = $"{compositionPath}/{entryPointName}.cs";
+            if (!File.Exists(ToFullPath(entryPointPath)))
+            {
+                string script = string.Join(Environment.NewLine, new[]
+                {
+                    "using Blackhole.ModuleSystem.Composition;",
+                    string.Empty,
+                    $"namespace {assemblyRoot}.Composition",
+                    "{",
+                    $"    public sealed class {entryPointName} : RootModuleStartup",
+                    "    {",
+                    $"        public {entryPointName}(RootModuleStartupRegistry registry) : base(registry)",
+                    "        {",
+                    "        }",
+                    "    }",
+                    "}",
+                    string.Empty
+                });
+                File.WriteAllText(ToFullPath(entryPointPath), script);
+            }
+
+            string scopePath = $"{compositionPath}/{scopeName}.cs";
+            if (!File.Exists(ToFullPath(scopePath)))
+            {
+                string script = string.Join(Environment.NewLine, new[]
+                {
+                    "using VContainer;",
+                    "using VContainer.Unity;",
+                    string.Empty,
+                    $"namespace {assemblyRoot}.Composition",
+                    "{",
+                    $"    public sealed class {scopeName} : LifetimeScope",
+                    "    {",
+                    "        protected override void Configure(IContainerBuilder builder)",
+                    "        {",
+                    $"            builder.RegisterEntryPoint<{entryPointName}>(Lifetime.Singleton);",
+                    "        }",
+                    "    }",
+                    "}",
+                    string.Empty
+                });
+                File.WriteAllText(ToFullPath(scopePath), script);
+            }
+            else
+            {
+                string existingSource = File.ReadAllText(ToFullPath(scopePath));
+                string updatedSource = RootModuleScopeSource.EnsureEntryPointRegistration(existingSource, $"{assemblyRoot}.Composition.{entryPointName}");
+                if (updatedSource != existingSource)
+                    File.WriteAllText(ToFullPath(scopePath), updatedSource);
+            }
+
+            // Supply the meta before import so VContainer does not replace this script with its empty template.
+            string scopeMetaPath = ToFullPath($"{scopePath}.meta");
+            if (!File.Exists(scopeMetaPath))
+                File.WriteAllText(scopeMetaPath, "fileFormatVersion: 2\n" + $"guid: {GenerateUnityGuid()}\n");
+
+            PendingRootModuleSceneSetup.Queue(GetSceneAssetPath(), $"{assemblyRoot}.Composition.{scopeName}", scopePath, $"{assemblyRoot}.Composition.{entryPointName}");
         }
 
         private void CreateSettingsScaffold()
@@ -629,6 +718,12 @@ namespace Blackhole.Editor
 
         private bool CanCreate(out string validationMessage)
         {
+            if (EditorApplication.isCompiling || EditorApplication.isUpdating || EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                validationMessage = "Create modules in Edit Mode after compilation and import finish.";
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(assemblyRoot))
             {
                 validationMessage = "Assembly root is required.";
@@ -675,6 +770,12 @@ namespace Blackhole.Editor
             if (createSettings && !selectedLayers[ModuleLayer.Infrastructure])
             {
                 validationMessage = "Create Settings requires the Infrastructure layer.";
+                return false;
+            }
+
+            if (isRootModule && (!createScene || !createManifest || !selectedLayers[ModuleLayer.Composition]))
+            {
+                validationMessage = "Root modules require a scene, manifest and Composition layer.";
                 return false;
             }
 

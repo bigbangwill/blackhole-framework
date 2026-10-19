@@ -1,6 +1,6 @@
 {
   "name": "Blackhole.FrameworkDevelopment.EditModeTests",
-  "references": ["Blackhole.Framework.Composition", "Blackhole.Framework.Editor", "Blackhole.ModuleSystem.Composition", "Blackhole.AudioPlayer.Infrastructure"],
+  "references": ["Blackhole.Framework.Composition", "Blackhole.Framework.Editor", "Blackhole.ModuleSystem.Composition", "Blackhole.AudioPlayer.Infrastructure", "Blackhole.SharedKernel.Composition", "Blackhole.Messaging.Composition", "Blackhole.Messaging.Contract", "VContainer"],
   "includePlatforms": ["Editor"],
   "optionalUnityReferences": ["TestAssemblies"]
 }

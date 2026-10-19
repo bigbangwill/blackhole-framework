@@ -18,7 +18,6 @@ namespace Blackhole.Framework.Composition.Editor
             if (startingModule != null)
             {
                 SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(startingModule.ModuleScene);
-                EditorGUILayout.ObjectField("Starting Scene", scene, typeof(SceneAsset), false);
                 if (scene == null)
                     EditorGUILayout.HelpBox("The selected module must reference an existing scene.", MessageType.Error);
             }

@@ -1,7 +1,9 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "unity": "6000.5.0f1",
   "dependencies": {
+    "com.cysharp.messagepipe": "https://github.com/Cysharp/MessagePipe.git?path=src/MessagePipe.Unity/Assets/Plugins/MessagePipe#3adc01deb1a283cb2faeb36c00178b84884a7fc3",
+    "com.cysharp.messagepipe.vcontainer": "https://github.com/Cysharp/MessagePipe.git?path=src/MessagePipe.Unity/Assets/Plugins/MessagePipe.VContainer#3adc01deb1a283cb2faeb36c00178b84884a7fc3",
     "com.unity.ugui": "2.5.0",
     "com.unity.inputsystem": "1.19.0",
     "com.unity.render-pipelines.universal": "17.5.0",

@@ -11,6 +11,9 @@ namespace Blackhole.Development.Editor
     {
         private static readonly string[] PackagesToAdd =
         {
+            "https://github.com/Cysharp/MessagePipe.git?path=src/MessagePipe.Unity/Assets/Plugins/MessagePipe#3adc01deb1a283cb2faeb36c00178b84884a7fc3",
+            "https://github.com/Cysharp/MessagePipe.git?path=src/MessagePipe.Unity/Assets/Plugins/MessagePipe.VContainer#3adc01deb1a283cb2faeb36c00178b84884a7fc3",
+
             "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.5.11",
             "https://github.com/hadashiA/VContainer.git?path=VContainer/Assets/VContainer#1.18.0",
             "com.unity.render-pipelines.universal@17.5.0",
