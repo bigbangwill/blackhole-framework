@@ -1,6 +1,33 @@
 {
   "name": "Blackhole.FrameworkDevelopment.EditModeTests",
-  "references": ["Blackhole.Framework.Composition", "Blackhole.Framework.Editor", "Blackhole.ModuleSystem.Composition", "Blackhole.AudioPlayer.Infrastructure", "Blackhole.SharedKernel.Composition", "Blackhole.Messaging.Composition", "Blackhole.Messaging.Contract", "VContainer"],
-  "includePlatforms": ["Editor"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "references": [
+    "Blackhole.Framework.Composition",
+    "Blackhole.Framework.Editor",
+    "Blackhole.ModuleSystem.Composition",
+    "Blackhole.AudioPlayer.Infrastructure",
+    "Blackhole.SharedKernel.Composition",
+    "Blackhole.Messaging.Composition",
+    "Blackhole.Messaging.Contract",
+    "VContainer",
+    "Blackhole.WorldInteraction.Application",
+    "Blackhole.WorldInteraction.Contract",
+    "Blackhole.WorldInteraction.Infrastructure",
+    "Blackhole.WorldInteraction.Presentation",
+    "Blackhole.WorldInteraction.Shared",
+    "Blackhole.CameraController.Contract",
+    "Blackhole.CameraController.Implementation",
+    "Blackhole.CameraController.Composition",
+    "Blackhole.RestApi.Contract",
+    "Blackhole.Authentication.Application",
+    "Blackhole.Authentication.Contract",
+    "Blackhole.SharedKernel.Contract",
+    "Blackhole.LocalStorageFile.Contract",
+    "Blackhole.FrameworkDevelopment.Smoke"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
 }

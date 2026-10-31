@@ -15,6 +15,7 @@ MonoBehaviour:
   moduleManifests:
   - {fileID: 11400000, guid: 9a49ae9d07074004e83ec50c62a9b0b5, type: 2}
   - {fileID: 11400000, guid: 9ffca10480738aa489b0bd8d0db5b156, type: 2}
+  - {fileID: 11400000, guid: 5a01a0dcdcfa14b4e8d5768c42d33671, type: 2}
   - {fileID: 11400000, guid: a1058e17ecbb21f499db97e88748195c, type: 2}
   - {fileID: 11400000, guid: 93d74ac9dbd9352479dcef888a95b98f, type: 2}
   - {fileID: 11400000, guid: 4acf8b3261fc0204e8491626bac67330, type: 2}

@@ -30,5 +30,29 @@ namespace Blackhole.WorldInteraction.Contract
         /// <summary>Removes a listener from pointer-click events.</summary>
         /// <param name="listener">The listener to remove.</param>
         void RemovePointerClickedListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Adds a listener for begin-drag events.</summary>
+        /// <param name="listener">The listener to add.</param>
+        void AddBeginDragListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Removes a listener from begin-drag events.</summary>
+        /// <param name="listener">The listener to remove.</param>
+        void RemoveBeginDragListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Adds a listener for drag events.</summary>
+        /// <param name="listener">The listener to add.</param>
+        void AddDragListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Removes a listener from drag events.</summary>
+        /// <param name="listener">The listener to remove.</param>
+        void RemoveDragListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Adds a listener for end-drag events.</summary>
+        /// <param name="listener">The listener to add.</param>
+        void AddEndDragListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Removes a listener from end-drag events.</summary>
+        /// <param name="listener">The listener to remove.</param>
+        void RemoveEndDragListener(Action<WorldInteractionEventData> listener);
     }
 }

@@ -56,9 +56,9 @@ namespace Blackhole.RestApi.Contract
             _baseUrl = parsedBaseUri.AbsoluteUri.EndsWith("/", StringComparison.Ordinal) ? parsedBaseUri.AbsoluteUri : parsedBaseUri.AbsoluteUri + "/";
         }
 
-        public static RestRequest Get(string endpoint, IDictionary<string, string> headers = null)
+        public static RestRequest Get(string endpoint, IDictionary<string, string> headers = null, IDictionary<string, string> queryParams = null)
         {
-            return new RestRequest(endpoint, RestMethod.Get, headers);
+            return new RestRequest(AppendQueryParams(endpoint, queryParams), RestMethod.Get, headers);
         }
 
         public static RestRequest Post(string endpoint, string jsonBody = null, IDictionary<string, string> headers = null)
@@ -79,6 +79,42 @@ namespace Blackhole.RestApi.Contract
         public static RestRequest Delete(string endpoint, IDictionary<string, string> headers = null)
         {
             return new RestRequest(endpoint, RestMethod.Delete, headers);
+        }
+
+        private static string AppendQueryParams(string endpoint, IDictionary<string, string> queryParams)
+        {
+            if (string.IsNullOrWhiteSpace(endpoint))
+                throw new ArgumentException("The request endpoint cannot be null or empty.", nameof(endpoint));
+
+            if (queryParams == null || queryParams.Count == 0)
+                return endpoint;
+
+            var parameters = new List<string>();
+
+            foreach (var parameter in queryParams)
+            {
+                if (string.IsNullOrWhiteSpace(parameter.Key))
+                    throw new ArgumentException("A query parameter name cannot be null or empty.", nameof(queryParams));
+
+                if (parameter.Value == null)
+                    continue;
+
+                parameters.Add($"{Uri.EscapeDataString(parameter.Key)}={Uri.EscapeDataString(parameter.Value)}");
+            }
+
+            if (parameters.Count == 0)
+                return endpoint;
+
+            int fragmentIndex = endpoint.IndexOf('#');
+            string fragment = fragmentIndex >= 0 ? endpoint.Substring(fragmentIndex) : string.Empty;
+            string url = fragmentIndex >= 0 ? endpoint.Substring(0, fragmentIndex) : endpoint;
+
+            string separator = url.Contains("?") ? "&" : "?";
+
+            if (url.EndsWith("?", StringComparison.Ordinal) || url.EndsWith("&", StringComparison.Ordinal))
+                separator = string.Empty;
+
+            return url + separator + string.Join("&", parameters) + fragment;
         }
     }
 }

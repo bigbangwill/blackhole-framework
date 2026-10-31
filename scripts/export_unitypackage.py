@@ -15,8 +15,8 @@ GUID_PATTERN = re.compile(r"^guid: ([a-f0-9]{32})\r?$", re.MULTILINE)
 REFERENCE_PATTERN = re.compile(r"(?:\{fileID:\s*-?\d+,\s*guid:\s*|GUID:|[?&](?:amp;)?guid=)([a-f0-9]{32})")
 TAG_PATTERN = re.compile(r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z.-]+))?")
 TEXT_EXTENSIONS = {".cs", ".asset", ".unity", ".prefab", ".mat", ".mixer", ".asmdef", ".json", ".uxml", ".uss", ".md", ".shader", ".hlsl", ".xml", ".nuspec", ".inputactions"}
-# Input System's UI module/default actions and Unity UI's EventSystem.
-DEPENDENCY_GUIDS = {"01614664b831546d2ae94a42149d80ac", "ca9f5fa95ffab41fb9a615ab714db018", "76c392e42b5098c458856cdf6ecaaaa1"}
+# Input System UI/default actions and Unity UI's EventSystem, GraphicRaycaster and Image.
+DEPENDENCY_GUIDS = {"01614664b831546d2ae94a42149d80ac", "ca9f5fa95ffab41fb9a615ab714db018", "76c392e42b5098c458856cdf6ecaaaa1", "dc42784cf147c0c48a680349fa168899", "fe87c0e1cc204ed48ad3b37840f39efc"}
 SECRET_PATTERN = re.compile(r"eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")
 
 

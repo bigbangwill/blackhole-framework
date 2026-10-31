@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 - 2026-10-31
+
+- Add the reusable CameraController module with smooth panning, bounded orthographic pinch zoom, settings and a drag-surface prefab.
+- Add pointer-aware WorldInteraction drag events, release hit flags, camera-plane raycasting and a camera-bound input canvas.
+- Add isolated module test-scene scaffolding, dependency scene loading and reliable asset creation after compilation.
+- Restore authentication sessions from local storage with a ScriptableObject fallback and lazy header initialization.
+- Support encoded GET query parameters while preserving existing queries and URL fragments.
+- Keep generated test scenes and interaction examples under Assets/FrameworkTests and outside release archives.
+
+### Migration
+
+Keep configured settings, layer masks, backend URLs, saved sessions, audio and encryption keys when upgrading. Add Blackhole.CameraController to a consuming module's dependencies, activate its camera and enable interaction through ICameraController. Movement settings are injected from the module settings asset and can be overridden at runtime. Custom IInteractionTarget and IInteractionEventSource implementations must implement the new drag callbacks; OnPointerUp now takes a target-hit flag. WorldInteractionEventData includes PointerId and IsHit; legacy constructors and IsPointerOverUI remain available. The WorldInteraction scene retains its EventSystem for standalone use; projects with a shared EventSystem should retain exactly one active instance. Generated isolated tests live under Assets/FrameworkTests/Isolated.
+
 ## 0.3.0 - 2026-10-19
 
 - Add standalone Messaging contracts, MessagePipe adapters, module assets and dependency injection registration.

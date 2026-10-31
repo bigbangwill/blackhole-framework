@@ -1,5 +1,28 @@
 {
   "name": "Blackhole.FrameworkDevelopment.PlayModeTests",
-  "references": ["Blackhole.FrameworkDevelopment.Smoke", "Blackhole.Framework.Composition", "Blackhole.ModuleSystem.Composition", "VContainer", "UniTask"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "references": [
+    "Blackhole.FrameworkDevelopment.Smoke",
+    "Blackhole.Framework.Composition",
+    "Blackhole.ModuleSystem.Composition",
+    "VContainer",
+    "UniTask",
+    "Blackhole.WorldInteraction.Application",
+    "Blackhole.WorldInteraction.Contract",
+    "Blackhole.WorldInteraction.Infrastructure",
+    "Blackhole.WorldInteraction.Presentation",
+    "Blackhole.WorldInteraction.Shared",
+    "Blackhole.CameraController.Contract",
+    "Blackhole.CameraController.Implementation",
+    "Blackhole.CameraController.Composition",
+    "Blackhole.RestApi.Contract",
+    "Blackhole.Authentication.Application",
+    "Blackhole.Authentication.Contract",
+    "Blackhole.SharedKernel.Contract",
+    "Blackhole.LocalStorageFile.Contract",
+    "Unity.ugui",
+    "Blackhole.WorldInteraction.Composition"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
 }

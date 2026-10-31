@@ -26,6 +26,10 @@ class PackageExportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "outside the framework"):
             release_contents("Assets/BlackholeFramework/settings.asset", b"setting: {fileID: 11400000, guid: cccccccccccccccccccccccccccccccc, type: 2}", set())
 
+    def test_input_canvas_accepts_required_unity_ui_components(self):
+        canvas = b"raycaster: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}\nimage: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}\n"
+        self.assertEqual(release_contents("Assets/BlackholeFramework/WorldInteraction/WorldInteractionScene.unity", canvas, set()), canvas)
+
     def test_ui_asset_references_are_validated_and_line_endings_normalized(self):
         with self.assertRaisesRegex(ValueError, "outside the framework"):
             release_contents("Assets/BlackholeFramework/ui.uxml", b'<Style src="project://database/Assets/Game/style.uss?fileID=1&amp;guid=cccccccccccccccccccccccccccccccc" />', set())

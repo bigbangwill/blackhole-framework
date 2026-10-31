@@ -26,17 +26,57 @@ namespace Blackhole.Authentication.Application
             _dataSerializer = dataSerializer;
         }
 
-        public UniTask<Result<SendSmsError>> SendSmsAsync(
-            SendSmsRequestDto request,
-            CancellationToken ct)
+        public void Init()
+        {
+            if (!TryLoadSessionTokenFromLocal(out var tokenDto))
+            {
+                if (!TryLoadSessionTokenFromSO(out tokenDto))
+                {
+                    Debug.Log("No authentication session is available.");
+                    return;
+                }
+            }
+            SetSessionToken(tokenDto);
+        }
+
+        private bool TryLoadSessionTokenFromLocal(out SessionTokenDto sessionToken)
+        {
+            sessionToken = default;
+            var load = _saveData.LoadData(SessionTokenStorageKey);
+            if (load.IsFailure)
+            {
+                return false;
+            }
+
+            var deserialize = _dataSerializer.DeserializeData<SessionTokenDto>(load.Value);
+            if (deserialize.IsFailure)
+            {
+                Debug.LogError($"Failed to deserialize session token: {deserialize.Error}");
+                return false;
+            }
+            sessionToken = deserialize.Value;
+            return true;
+        }
+
+        private bool TryLoadSessionTokenFromSO(out SessionTokenDto sessionToken)
+        {
+            sessionToken = default;
+            var load = _sessionTokenDtoRepository.GetSessionTokenDto();
+            if (load.IsFailure)
+            {
+                return false;
+            }
+            sessionToken = load.Value;
+            return true;
+        }
+
+        public UniTask<Result<SendSmsError>> SendSmsAsync(SendSmsRequestDto request, CancellationToken ct)
         {
             var command = new SendSmsCommand(request.MobileNumber);
             return _authenticationGateway.SendSmsAsync(command, ct);
         }
 
-        public async UniTask<Result<VerifySmsError>> VerifyCodeAsync(
-            VerifySmsRequestDto request,
-            CancellationToken ct)
+        public async UniTask<Result<VerifySmsError>> VerifyCodeAsync(VerifySmsRequestDto request, CancellationToken ct)
         {
             var command = new VerifySmsCommand(request.MobileNumber, request.VerifyCode);
             var result = await _authenticationGateway.VerifyCodeAsync(command, ct);
@@ -53,21 +93,19 @@ namespace Blackhole.Authentication.Application
         public Result<KeyValuePair<string, string>, SessionTokenError> GetAccessTokenHeader()
         {
             if (_sessionToken == null)
-            {
-                return Result<KeyValuePair<string, string>, SessionTokenError>
-                    .Failure(SessionTokenError.NotFound);
-            }
+                Init();
 
-            return Result<KeyValuePair<string, string>, SessionTokenError>
-                .Success(_sessionToken.AccessTokenHeader());
+            if (_sessionToken == null)
+                return Result<KeyValuePair<string, string>, SessionTokenError>.Failure(SessionTokenError.NotFound);
+
+            return Result<KeyValuePair<string, string>, SessionTokenError>.Success(_sessionToken.AccessTokenHeader());
         }
 
         public async UniTask<Result<SessionTokenDto, RefreshTokenError>> RefreshToken(CancellationToken ct)
         {
             if (_sessionToken == null)
             {
-                return Result<SessionTokenDto, RefreshTokenError>
-                    .Failure(RefreshTokenError.MissingSessionToken);
+                return Result<SessionTokenDto, RefreshTokenError>.Failure(RefreshTokenError.MissingSessionToken);
             }
 
             var command = new RefreshTokenCommand(_sessionToken.RefreshTokenHeader());
@@ -106,45 +144,8 @@ namespace Blackhole.Authentication.Application
             var retryCommand = new IsValidUserCommand(_sessionToken.AccessTokenHeader());
             var retryResult = await _authenticationGateway.IsValidUserAsync(retryCommand, ct);
 
-            return retryResult.IsSuccess
-                ? Result<IsValidUserError>.Success()
-                : Result<IsValidUserError>.Failure(retryResult.Error);
+            return retryResult.IsSuccess ? Result<IsValidUserError>.Success() : Result<IsValidUserError>.Failure(retryResult.Error);
         }
-
-        public void Init()
-        {
-            var load = _saveData.LoadData(SessionTokenStorageKey);
-            if (load.IsFailure)
-            {
-                Debug.Log("No persisted authentication session was found.");
-                return;
-            }
-
-            var deserialize = _dataSerializer.DeserializeData<SessionTokenDto>(load.Value);
-            if (deserialize.IsFailure)
-            {
-                Debug.LogError($"Failed to deserialize session token: {deserialize.Error}");
-                return;
-            }
-
-            var tokenDto = deserialize.Value;
-            _sessionToken = new SessionToken(tokenDto.AccessToken, tokenDto.RefreshToken, tokenDto.TokenType, tokenDto.ExpiresIn);
-        }
-
-        //public void Init()
-        //{
-        //    var result = _sessionTokenDtoRepository.GetSessionTokenDto();
-        //    if (result.IsFailure)
-        //    {
-        //        Debug.Log("No persisted authentication session was found.");
-        //        return;
-        //    }
-
-        //    SessionTokenDto tokenDto = result.Value;
-        //    _sessionToken = new(tokenDto.AccessToken, tokenDto.RefreshToken, tokenDto.TokenType, tokenDto.ExpiresIn);
-
-        //    Debug.Log(JsonConvert.SerializeObject(tokenDto, Formatting.Indented));
-        //}
 
         private void SetSessionToken(SessionTokenDto tokenDto)
         {
@@ -167,19 +168,11 @@ namespace Blackhole.Authentication.Application
 
             if (_sessionToken == null)
             {
-                _sessionToken = new SessionToken(
-                    tokenDto.AccessToken,
-                    tokenDto.RefreshToken,
-                    tokenDto.TokenType,
-                    tokenDto.ExpiresIn);
+                _sessionToken = new SessionToken(tokenDto.AccessToken, tokenDto.RefreshToken, tokenDto.TokenType, tokenDto.ExpiresIn);
                 return;
             }
 
-            _sessionToken.Replace(
-                tokenDto.AccessToken,
-                tokenDto.RefreshToken,
-                tokenDto.TokenType,
-                tokenDto.ExpiresIn);
+            _sessionToken.Replace(tokenDto.AccessToken, tokenDto.RefreshToken, tokenDto.TokenType, tokenDto.ExpiresIn);
         }
     }
 }

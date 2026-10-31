@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.CameraController.Implementation",
+    "rootNamespace": "Blackhole.CameraController.Implementation",
+    "references": [
+        "Blackhole.CameraController.Contract",
+        "Blackhole.WorldInteraction.Contract",
+        "Blackhole.Settings.Contract",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

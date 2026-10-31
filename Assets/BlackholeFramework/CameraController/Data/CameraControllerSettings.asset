@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3756379e41763e04a8a14c342362b0d8, type: 3}
+  m_Name: CameraControllerSettings
+  m_EditorClassIdentifier: Blackhole.CameraController.Implementation::Blackhole.CameraController.Implementation.CameraControllerSettingsSO
+  boundary:
+    serializedVersion: 2
+    x: -20
+    y: -15
+    width: 40
+    height: 30
+  minZoomIn: 2
+  maxZoomOut: 12
+  speed: 1
+  dragSmoothness: 10

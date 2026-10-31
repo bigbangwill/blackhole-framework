@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.CameraController.Composition",
+    "rootNamespace": "Blackhole.CameraController.Composition",
+    "references": [
+        "Blackhole.CameraController.Contract",
+        "Blackhole.CameraController.Implementation",
+        "Blackhole.SharedKernel.Composition",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
