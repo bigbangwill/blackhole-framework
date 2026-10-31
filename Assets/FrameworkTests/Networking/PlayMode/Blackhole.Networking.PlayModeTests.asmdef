@@ -1,0 +1,12 @@
+{
+  "name": "Blackhole.Networking.PlayModeTests",
+  "references": [
+    "Blackhole.Networking.TestSupport",
+    "Blackhole.Networking.Contract",
+    "VContainer",
+    "Blackhole.SharedKernel.Contract"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

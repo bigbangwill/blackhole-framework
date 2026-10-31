@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.5.0 - 2026-10-31
+
+- Add Blackhole.Networking contracts, Unity Transport client/server adapters, connection events and role-specific installer assets.
+- Pin Unity Transport 6.5.0 and add transport-only lifecycle and socket tests outside release archives.
+- Preserve networking GUIDs without importing the multiplayer game or lesson modules.
+
+### Migration
+
+Install Unity Transport 6.5.0. Register a payload handler for the chosen role and install RuntimeLifecycle in the scope owning that transport. Install one networking role per session and connect clients after initialization. Preserve existing starting modules, settings and game configuration.
+
+## 0.4.0 - 2026-10-31
+
+- Add CameraController with smooth panning, bounded pinch zoom, settings and a drag-surface prefab.
+- Add pointer-aware WorldInteraction drag events, release hit flags, camera-plane raycasting and a camera-bound input canvas.
+- Add isolated test-scene scaffolding and reliable asset creation after compilation.
+- Add local/repository session restoration and lazy authentication header initialization.
+- Add encoded GET query parameters with existing query and fragment preservation.
+- Place examples and generated tests outside the exported framework.
+
+### Migration
+
+Preserve configured settings, layers, backend URLs, sessions, audio and encryption keys. Add Blackhole.CameraController as a dependency, then activate its camera and enable interaction through ICameraController. Its settings asset supplies movement defaults; callers can override them. Custom interaction implementations need the new drag callbacks and pointer-up target-hit flag. Event payloads now include PointerId and IsHit while retaining the legacy constructor and IsPointerOverUI property. Keep exactly one active EventSystem when composing scenes. Isolated tests are generated under Assets/FrameworkTests/Isolated and are excluded from releases.
+
 ## 0.3.0 - 2026-10-19
 
 - Add standalone Messaging contracts, MessagePipe adapters, module assets and dependency injection registration.

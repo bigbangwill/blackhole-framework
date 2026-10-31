@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3e677f1730ae054191fe8a5bb2292c6, type: 3}
+  m_Name: CameraControllerInstaller
+  m_EditorClassIdentifier: Blackhole.CameraController.Composition::Blackhole.CameraController.Composition.CameraControllerInstaller
+  settings: {fileID: 11400000, guid: fc067ce84ae9634408105526a5b9bdf9, type: 2}
+  controllerPrefab: {fileID: 2620749628201512478, guid: 812aa458004442b2b5b7206293f3c3ad, type: 3}

@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="CameraMovementTest.uss" />
+    <ui:VisualElement name="screen" class="screen" picking-mode="Ignore">
+        <ui:VisualElement name="controls" class="panel">
+            <ui:Label text="BLACKHOLE / FRAMEWORK TEST" class="eyebrow" />
+            <ui:Label text="Camera movement" class="title" />
+            <ui:Label text="Drag the map with the mouse or one finger. Pinch with two fingers to zoom. Pan to the gold boundary to check the viewport limits." class="instructions" />
+            <ui:Label name="status" text="Starting camera module..." class="status" />
+            <ui:VisualElement class="row">
+                <ui:Button name="zoomIn" text="Zoom +" class="control" />
+                <ui:Button name="zoomOut" text="Zoom -" class="control" />
+                <ui:Button name="reset" text="Reset" class="control" />
+            </ui:VisualElement>
+            <ui:VisualElement class="row">
+                <ui:Button name="pause" text="Pause input" class="control" />
+            </ui:VisualElement>
+            <ui:Label text="Gold: map boundary. Cyan: origin. Colored landmarks make panning and zoom easy to see." class="hint" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

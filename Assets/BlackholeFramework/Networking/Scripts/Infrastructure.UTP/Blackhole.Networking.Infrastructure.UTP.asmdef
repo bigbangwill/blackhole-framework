@@ -1,0 +1,22 @@
+{
+    "name": "Blackhole.Networking.Infrastructure.UTP",
+    "rootNamespace": "Blackhole.Networking.Infrastructure.UTP",
+    "references": [
+        "Blackhole.Networking.Application",
+        "Blackhole.Networking.Contract",
+        "Blackhole.SharedKernel.Application",
+        "Blackhole.SharedKernel.Contract",
+        "Blackhole.Messaging.Contract",
+        "Unity.Collections",
+        "Unity.Networking.Transport"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

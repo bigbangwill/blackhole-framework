@@ -9,6 +9,12 @@ from export_unitypackage import build_package, collect_assets, release_contents
 
 
 class PackageExportTests(unittest.TestCase):
+    def test_networking_export_uses_default_role_endpoints(self):
+        settings = b"  role: 7\n  host: project-network.example\n  port: 9999\n"
+        for name, role, host in [("NetworkingInstaller", 0, "127.0.0.1"), ("NetworkingServerInstaller", 1, "0.0.0.0")]:
+            exported = release_contents(f"Assets/BlackholeFramework/Networking/Data/{name}.asset", settings, set())
+            self.assertEqual(exported, f"  role: {role}\n  host: {host}\n  port: 7788\n".encode())
+
     def test_configured_game_references_and_session_are_removed(self):
         guid = "a" * 32
         external_guid = "b" * 32
@@ -25,6 +31,10 @@ class PackageExportTests(unittest.TestCase):
     def test_unknown_serialized_reference_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "outside the framework"):
             release_contents("Assets/BlackholeFramework/settings.asset", b"setting: {fileID: 11400000, guid: cccccccccccccccccccccccccccccccc, type: 2}", set())
+
+    def test_input_canvas_accepts_required_unity_ui_components(self):
+        canvas = b"raycaster: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}\nimage: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}\n"
+        self.assertEqual(release_contents("Assets/BlackholeFramework/WorldInteraction/WorldInteractionScene.unity", canvas, set()), canvas)
 
     def test_ui_asset_references_are_validated_and_line_endings_normalized(self):
         with self.assertRaisesRegex(ValueError, "outside the framework"):

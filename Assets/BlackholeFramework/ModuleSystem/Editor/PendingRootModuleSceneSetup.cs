@@ -101,7 +101,7 @@ namespace Blackhole.Editor
                 SessionState.SetString(SessionStateKey, JsonUtility.ToJson(pending));
         }
 
-        internal static void SetupScene(string scenePath, Type scopeType)
+        internal static void SetupScene(string scenePath, Type scopeType, Action<LifetimeScope> configureScope = null)
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath) == null)
                 throw new InvalidOperationException("The module scene does not exist.");
@@ -115,16 +115,21 @@ namespace Blackhole.Editor
             try
             {
                 LifetimeScope[] scopes = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<LifetimeScope>(true)).ToArray();
-                if (scopes.Length == 1 && scopes[0].GetType() == scopeType)
+                if (scopes.Length == 1 && scopes[0].GetType() == scopeType && configureScope == null)
                     return;
 
-                if (scopes.Length > 0)
+                if (scopes.Length > 1 || (scopes.Length == 1 && scopes[0].GetType() != scopeType))
                     throw new InvalidOperationException("The scene already has a different LifetimeScope. Replace it with the generated root LifetimeScope before retrying.");
 
                 SceneManager.SetActiveScene(scene);
-                GameObject root = new(scopeType.Name);
-                SceneManager.MoveGameObjectToScene(root, scene);
-                root.AddComponent(scopeType);
+                LifetimeScope scope = scopes.FirstOrDefault();
+                if (scope == null)
+                {
+                    GameObject root = new(scopeType.Name);
+                    SceneManager.MoveGameObjectToScene(root, scene);
+                    scope = (LifetimeScope)root.AddComponent(scopeType);
+                }
+                configureScope?.Invoke(scope);
                 EditorSceneManager.MarkSceneDirty(scene);
                 if (!EditorSceneManager.SaveScene(scene))
                     throw new InvalidOperationException("The module scene could not be saved.");

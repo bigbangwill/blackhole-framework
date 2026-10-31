@@ -20,6 +20,9 @@ namespace Blackhole.Editor
         private const string UniTaskAssemblyName = "UniTask";
         private const string VContainerAssemblyName = "VContainer";
         private const string ModuleSystemCompositionAssemblyName = "Blackhole.ModuleSystem.Composition";
+        private const string ModuleSystemContractAssemblyName = "Blackhole.ModuleSystem.Contract";
+        private const string SceneLoaderContractAssemblyName = "Blackhole.SceneLoader.Contract";
+        private const string SceneLoaderModuleId = "Blackhole.SceneLoader";
 
         private readonly Dictionary<ModuleLayer, bool> selectedLayers = new Dictionary<ModuleLayer, bool>
         {
@@ -40,6 +43,7 @@ namespace Blackhole.Editor
         private bool createSettings = true;
         private bool isRootModule;
         private bool persistentRootModule;
+        private bool createIsolatedTestScene = true;
         private Vector2 scrollPosition;
 
         [MenuItem("Assets/Create/Blackhole/Modules/Module Scaffold", false, 80)]
@@ -78,6 +82,14 @@ namespace Blackhole.Editor
 
             EditorGUILayout.Space(8f);
             EditorGUILayout.LabelField("Module Assets", EditorStyles.boldLabel);
+            createIsolatedTestScene = EditorGUILayout.ToggleLeft(new GUIContent("Create Isolated Test Scene", "Create a standalone scene under Assets/FrameworkTests/Isolated that installs this module and loads its dependency scenes."), createIsolatedTestScene);
+            if (createIsolatedTestScene)
+            {
+                createManifest = true;
+                selectedLayers[ModuleLayer.Composition] = true;
+                EditorGUILayout.HelpBox("The test scene is wired after compilation. It includes a camera and scope, and adds SceneLoader to the module dependencies.", MessageType.Info);
+            }
+
             isRootModule = EditorGUILayout.ToggleLeft(new GUIContent("Root Module", "Generate a LifetimeScope and RootModuleStartup entry point and wire them into the module scene after compilation."), isRootModule);
             if (isRootModule)
             {
@@ -98,7 +110,7 @@ namespace Blackhole.Editor
                 }
             }
 
-            using (new EditorGUI.DisabledScope(isRootModule))
+            using (new EditorGUI.DisabledScope(isRootModule || createIsolatedTestScene))
                 createManifest = EditorGUILayout.ToggleLeft(new GUIContent("Create Module Manifest", "Create and register a ModuleManifestSO for this module."), createManifest);
 
             createSettings = EditorGUILayout.ToggleLeft(
@@ -114,6 +126,8 @@ namespace Blackhole.Editor
             {
                 EditorGUILayout.LabelField("Preview", EditorStyles.boldLabel);
                 EditorGUILayout.LabelField("Target", GetModuleAssetPath());
+                if (createIsolatedTestScene)
+                    EditorGUILayout.LabelField("Test Scene", GetIsolatedTestSceneAssetPath());
                 if (createScene)
                 {
                     EditorGUILayout.LabelField("Scene", GetSceneAssetPath());
@@ -155,7 +169,7 @@ namespace Blackhole.Editor
 
         private void DrawLayerToggle(ModuleLayer layer, string label, string tooltip)
         {
-            using (new EditorGUI.DisabledScope(isRootModule && layer == ModuleLayer.Composition))
+            using (new EditorGUI.DisabledScope((isRootModule || createIsolatedTestScene) && layer == ModuleLayer.Composition))
                 selectedLayers[layer] = EditorGUILayout.ToggleLeft(new GUIContent(label, tooltip), selectedLayers[layer]);
         }
 
@@ -191,8 +205,24 @@ namespace Blackhole.Editor
                 return;
             }
 
+            CreateModuleFiles();
+            EditorUtility.DisplayDialog("Module Created", BuildCompletionMessage(modulePath), "OK");
+            Close();
+        }
+
+        internal void CreateModuleFiles()
+        {
+            if (createIsolatedTestScene)
+            {
+                createManifest = true;
+                selectedLayers[ModuleLayer.Composition] = true;
+            }
+
+            var modulePath = GetModuleAssetPath();
             var selected = GetSelectedLayers().ToArray();
             var existingAssemblies = FindAssemblyGuidsByName();
+            if (createIsolatedTestScene)
+                ValidateIsolatedTestRequirements(existingAssemblies);
             var layerGuids = selected.ToDictionary(layer => layer, layer => GetOrCreateLayerGuid(layer, existingAssemblies));
 
             EnsureAssetFolder(modulesPath);
@@ -230,6 +260,9 @@ namespace Blackhole.Editor
             if (isRootModule)
                 CreateRootModuleScaffold();
 
+            if (createIsolatedTestScene)
+                CreateIsolatedTestScaffold(manifest, existingAssemblies, layerGuids);
+
             if (manifest != null)
             {
                 RegisterManifestInCatalogs(manifest);
@@ -237,8 +270,6 @@ namespace Blackhole.Editor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            EditorUtility.DisplayDialog("Module Created", BuildCompletionMessage(modulePath), "OK");
-            Close();
         }
 
         private void WriteAsmdef(
@@ -412,7 +443,11 @@ namespace Blackhole.Editor
 
         private void CreateOrUpdateScene()
         {
-            var scenePath = GetSceneAssetPath();
+            CreateOrUpdateScene(GetSceneAssetPath());
+        }
+
+        private static void CreateOrUpdateScene(string scenePath)
+        {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath) == null)
             {
                 var previousActiveScene = SceneManager.GetActiveScene();
@@ -526,6 +561,8 @@ namespace Blackhole.Editor
 
             if (isRootModule)
                 createdItems.Add("root LifetimeScope and startup entry point (scene wiring completes after compilation)");
+            if (createIsolatedTestScene)
+                createdItems.Add("isolated test scene, camera and standalone scope with assigned catalog and manifest (wiring completes after compilation)");
 
             return $"Created {assemblyRoot} at {modulePath}.\n\nIncluded: {string.Join(", ", createdItems)}.";
         }
@@ -626,6 +663,88 @@ namespace Blackhole.Editor
                 File.WriteAllText(scopeMetaPath, "fileFormatVersion: 2\n" + $"guid: {GenerateUnityGuid()}\n");
 
             PendingRootModuleSceneSetup.Queue(GetSceneAssetPath(), $"{assemblyRoot}.Composition.{scopeName}", scopePath, $"{assemblyRoot}.Composition.{entryPointName}");
+        }
+
+        private static readonly string[] IsolatedTestAssemblyNames =
+        {
+            ModuleSystemCompositionAssemblyName, ModuleSystemContractAssemblyName, SharedKernelCompositionAssemblyName,
+            SceneLoaderContractAssemblyName, UniTaskAssemblyName, VContainerAssemblyName
+        };
+
+        private static ModuleManifestCatalogSO FindIsolatedTestCatalog()
+        {
+            const string defaultPath = "Assets/BlackholeFramework/ModuleSystem/ModuleManifestCatalog.asset";
+            return AssetDatabase.LoadAssetAtPath<ModuleManifestCatalogSO>(defaultPath) ?? AssetDatabase.FindAssets($"t:{nameof(ModuleManifestCatalogSO)}")
+                .Select(AssetDatabase.GUIDToAssetPath).OrderBy(path => path, StringComparer.Ordinal)
+                .Select(AssetDatabase.LoadAssetAtPath<ModuleManifestCatalogSO>).FirstOrDefault(catalog => catalog != null);
+        }
+
+        private static ModuleManifestSO FindSceneLoaderManifest()
+        {
+            return AssetDatabase.FindAssets($"t:{nameof(ModuleManifestSO)}").Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<ModuleManifestSO>).FirstOrDefault(module => module != null && module.ModuleID == SceneLoaderModuleId);
+        }
+
+        private static void ValidateIsolatedTestRequirements(IReadOnlyDictionary<string, AssemblyInfo> assemblies)
+        {
+            foreach (string assemblyName in IsolatedTestAssemblyNames)
+            {
+                if (!assemblies.ContainsKey(assemblyName))
+                    throw new InvalidOperationException($"Creating an isolated test scene requires the '{assemblyName}' assembly.");
+            }
+
+            if (FindIsolatedTestCatalog() == null || FindSceneLoaderManifest() == null)
+                throw new InvalidOperationException("Creating an isolated test scene requires a module catalog and the Blackhole.SceneLoader manifest.");
+        }
+
+        private void CreateIsolatedTestScaffold(
+            ModuleManifestSO manifest, IReadOnlyDictionary<string, AssemblyInfo> assemblies, IReadOnlyDictionary<ModuleLayer, string> layerGuids)
+        {
+            string scriptsPath = $"{GetIsolatedTestRootPath()}/Scripts";
+            EnsureAssetFolder(scriptsPath);
+            string assemblyName = $"{assemblyRoot}.Testing";
+            string asmdefPath = $"{scriptsPath}/{assemblyName}.asmdef";
+            AssemblyDefinition definition = File.Exists(ToFullPath(asmdefPath))
+                ? JsonUtility.FromJson<AssemblyDefinition>(File.ReadAllText(ToFullPath(asmdefPath)))
+                : new AssemblyDefinition
+                {
+                    name = assemblyName, rootNamespace = assemblyName, includePlatforms = Array.Empty<string>(), excludePlatforms = Array.Empty<string>(),
+                    precompiledReferences = Array.Empty<string>(), autoReferenced = true, defineConstraints = Array.Empty<string>(), versionDefines = Array.Empty<VersionDefine>()
+                };
+            definition.references = IsolatedTestAssemblyNames.Select(name => $"GUID:{assemblies[name].Guid}")
+                .Concat(layerGuids.Values.Select(guid => $"GUID:{guid}")).Concat(definition.references ?? Array.Empty<string>()).Distinct().ToArray();
+            // This assembly contains scene components, so it must run in Play Mode as well as the Editor.
+            File.WriteAllText(ToFullPath(asmdefPath), JsonUtility.ToJson(definition, true));
+            if (!File.Exists(ToFullPath(asmdefPath + ".meta")))
+                File.WriteAllText(ToFullPath(asmdefPath + ".meta"), CreateAsmdefMeta(GenerateUnityGuid()));
+
+            SerializedObject serialized = new(manifest);
+            SerializedProperty dependencies = serialized.FindProperty("dependencies");
+            ModuleManifestSO sceneLoader = FindSceneLoaderManifest();
+            bool hasSceneLoader = Enumerable.Range(0, dependencies.arraySize).Any(index => dependencies.GetArrayElementAtIndex(index).objectReferenceValue == sceneLoader);
+            if (manifest != sceneLoader && !hasSceneLoader)
+            {
+                dependencies.InsertArrayElementAtIndex(dependencies.arraySize);
+                dependencies.GetArrayElementAtIndex(dependencies.arraySize - 1).objectReferenceValue = sceneLoader;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(manifest);
+            }
+
+            string scopeName = $"{SuggestFolderName(assemblyRoot)}TestLifetimeScope";
+            string scopePath = $"{scriptsPath}/{scopeName}.cs";
+            bool newScope = !File.Exists(ToFullPath(scopePath));
+            string source = IsolatedModuleScopeSource.Build(assemblyName, scopeName, isRootModule);
+            if (newScope)
+            {
+                // Supply the meta first so VContainer's script template processor preserves the bootstrap.
+                if (!File.Exists(ToFullPath(scopePath + ".meta")))
+                    File.WriteAllText(ToFullPath(scopePath + ".meta"), "fileFormatVersion: 2\n" + $"guid: {GenerateUnityGuid()}\n");
+                File.WriteAllText(ToFullPath(scopePath), source);
+            }
+
+            string scenePath = GetIsolatedTestSceneAssetPath();
+            CreateOrUpdateScene(scenePath);
+            PendingIsolatedModuleSceneSetup.Queue(scenePath, scopePath, GetManifestAssetPath(), AssetDatabase.GetAssetPath(FindIsolatedTestCatalog()), newScope ? source : null);
         }
 
         private void CreateSettingsScaffold()
@@ -779,6 +898,12 @@ namespace Blackhole.Editor
                 return false;
             }
 
+            if (createIsolatedTestScene && (!createManifest || !selectedLayers[ModuleLayer.Composition]))
+            {
+                validationMessage = "Isolated test scenes require a module manifest and Composition layer.";
+                return false;
+            }
+
             validationMessage = string.Empty;
             return true;
         }
@@ -813,6 +938,16 @@ namespace Blackhole.Editor
         private string GetSceneAssetPath()
         {
             return $"{GetModuleAssetPath()}/{sceneName}.unity";
+        }
+
+        private string GetIsolatedTestSceneAssetPath()
+        {
+            return $"{GetIsolatedTestRootPath()}/{SuggestFolderName(assemblyRoot)}Test.unity";
+        }
+
+        private string GetIsolatedTestRootPath()
+        {
+            return $"Assets/FrameworkTests/Isolated/{assemblyRoot}";
         }
 
         private string GetManifestAssetPath()
@@ -994,10 +1129,11 @@ namespace Blackhole.Editor
     internal static class PendingModuleSettingsAssetCreator
     {
         private const string SessionStateKey = "Blackhole.ModuleScaffolder.PendingSettingsAsset";
+        private static double nextAttempt;
 
         static PendingModuleSettingsAssetCreator()
         {
-            EditorApplication.delayCall += TryCreatePendingAsset;
+            EditorApplication.update += TryCreatePendingAsset;
         }
 
         public static void Queue(string typeName, string assetPath)
@@ -1009,14 +1145,14 @@ namespace Blackhole.Editor
             };
 
             SessionState.SetString(SessionStateKey, JsonUtility.ToJson(request));
-            EditorApplication.delayCall += TryCreatePendingAsset;
         }
 
         private static void TryCreatePendingAsset()
         {
-            if (EditorApplication.isCompiling || EditorApplication.isUpdating)
+            if (EditorApplication.timeSinceStartup < nextAttempt || EditorApplication.isCompiling || EditorApplication.isUpdating || EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
+            nextAttempt = EditorApplication.timeSinceStartup + 1;
             string requestJson = SessionState.GetString(SessionStateKey, string.Empty);
             if (string.IsNullOrWhiteSpace(requestJson))
                 return;
@@ -1037,11 +1173,7 @@ namespace Blackhole.Editor
 
             Type settingsType = TypeCache.GetTypesDerivedFrom<ScriptableObject>().FirstOrDefault(type => type.FullName == request.TypeName);
             if (settingsType == null)
-            {
-                SessionState.EraseString(SessionStateKey);
-                Debug.LogError($"Could not create settings asset '{request.AssetPath}' because type '{request.TypeName}' was not found after compilation.");
                 return;
-            }
 
             ScriptableObject settingsAsset = ScriptableObject.CreateInstance(settingsType);
             AssetDatabase.CreateAsset(settingsAsset, request.AssetPath);
@@ -1063,27 +1195,25 @@ namespace Blackhole.Editor
     internal static class PendingModuleInstallerAssetCreator
     {
         private const string SessionStateKey = "Blackhole.ModuleScaffolder.PendingInstallerAsset";
+        private static double nextAttempt;
 
         static PendingModuleInstallerAssetCreator()
         {
-            EditorApplication.delayCall += TryCreatePendingAsset;
+            EditorApplication.update += TryCreatePendingAsset;
         }
 
         public static void Queue(string typeName, string assetPath, string manifestPath)
         {
             var request = new PendingModuleInstallerAssetRequest { TypeName = typeName, AssetPath = assetPath, ManifestPath = manifestPath };
             SessionState.SetString(SessionStateKey, JsonUtility.ToJson(request));
-            EditorApplication.delayCall += TryCreatePendingAsset;
         }
 
         private static void TryCreatePendingAsset()
         {
-            if (EditorApplication.isCompiling || EditorApplication.isUpdating)
-            {
-                EditorApplication.delayCall += TryCreatePendingAsset;
+            if (EditorApplication.timeSinceStartup < nextAttempt || EditorApplication.isCompiling || EditorApplication.isUpdating || EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
-            }
 
+            nextAttempt = EditorApplication.timeSinceStartup + 1;
             string requestJson = SessionState.GetString(SessionStateKey, string.Empty);
             if (string.IsNullOrWhiteSpace(requestJson))
                 return;
@@ -1091,11 +1221,7 @@ namespace Blackhole.Editor
             var request = JsonUtility.FromJson<PendingModuleInstallerAssetRequest>(requestJson);
             Type installerType = TypeCache.GetTypesDerivedFrom<Blackhole.SharedKernel.Composition.ModuleInstallerSO>().FirstOrDefault(type => type.FullName == request.TypeName);
             if (installerType == null)
-            {
-                SessionState.EraseString(SessionStateKey);
-                Debug.LogError($"Could not create installer '{request.AssetPath}': type '{request.TypeName}' was not found after compilation.");
                 return;
-            }
 
             var installer = AssetDatabase.LoadAssetAtPath<Blackhole.SharedKernel.Composition.ModuleInstallerSO>(request.AssetPath);
             if (installer == null)

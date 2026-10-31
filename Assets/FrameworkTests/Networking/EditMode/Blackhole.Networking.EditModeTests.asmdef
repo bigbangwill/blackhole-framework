@@ -1,0 +1,17 @@
+{
+  "name": "Blackhole.Networking.EditModeTests",
+  "references": [
+    "Blackhole.Networking.TestSupport",
+    "Blackhole.Networking.Contract",
+    "Blackhole.Networking.Composition",
+    "Blackhole.SharedKernel.Application",
+    "VContainer",
+    "Blackhole.SharedKernel.Contract"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

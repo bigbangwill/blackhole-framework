@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0 - 2026-10-31
+
+- Add Blackhole.Networking with client/server contracts, reliable Unity Transport adapters, peer and connection events, and configurable role-specific installers.
+- Pin Unity Transport 6.5.0 for the existing Unity 6000.5 development environment.
+- Preserve source networking GUIDs and keep multiplayer game logic and lesson scenes outside the framework import.
+- Add transport-only tests for role isolation, reliable payload delivery, scope lifecycle and server port reuse.
+
+### Migration
+
+Install Unity Transport 6.5.0 before importing this version. Networking requires a payload handler for the chosen role and the existing RuntimeLifecycle installer in the transport's owning scope. Messaging supplies the typed event publishers. Use the client installer or server installer once per session; call Connect after client initialization. The framework starting module and existing game configuration are preserved.
+
+## 0.4.0 - 2026-10-31
+
+- Add the reusable CameraController module with smooth panning, bounded orthographic pinch zoom, settings and a drag-surface prefab.
+- Add pointer-aware WorldInteraction drag events, release hit flags, camera-plane raycasting and a camera-bound input canvas.
+- Add isolated module test-scene scaffolding, dependency scene loading and reliable asset creation after compilation.
+- Restore authentication sessions from local storage with a ScriptableObject fallback and lazy header initialization.
+- Support encoded GET query parameters while preserving existing queries and URL fragments.
+- Keep generated test scenes and interaction examples under Assets/FrameworkTests and outside release archives.
+
+### Migration
+
+Keep configured settings, layer masks, backend URLs, saved sessions, audio and encryption keys when upgrading. Add Blackhole.CameraController to a consuming module's dependencies, activate its camera and enable interaction through ICameraController. Movement settings are injected from the module settings asset and can be overridden at runtime. Custom IInteractionTarget and IInteractionEventSource implementations must implement the new drag callbacks; OnPointerUp now takes a target-hit flag. WorldInteractionEventData includes PointerId and IsHit; legacy constructors and IsPointerOverUI remain available. The WorldInteraction scene retains its EventSystem for standalone use; projects with a shared EventSystem should retain exactly one active instance. Generated isolated tests live under Assets/FrameworkTests/Isolated.
+
 ## 0.3.0 - 2026-10-19
 
 - Add standalone Messaging contracts, MessagePipe adapters, module assets and dependency injection registration.

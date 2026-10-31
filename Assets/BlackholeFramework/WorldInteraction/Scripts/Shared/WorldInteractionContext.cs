@@ -39,10 +39,7 @@ namespace Blackhole.WorldInteraction.Application
         /// <param name="screenPosition">The pointer position in screen-space pixels.</param>
         /// <param name="pointerId">The EventSystem pointer or device identifier.</param>
         /// <param name="pointerButton">The button that generated the event.</param>
-        public WorldInteractionContext(
-            Vector2 screenPosition,
-            int pointerId,
-            WorldInteractionPointerButton pointerButton = WorldInteractionPointerButton.Left)
+        public WorldInteractionContext(Vector2 screenPosition, int pointerId, WorldInteractionPointerButton pointerButton = WorldInteractionPointerButton.Left)
         {
             ScreenPosition = screenPosition;
             PointerId = pointerId;

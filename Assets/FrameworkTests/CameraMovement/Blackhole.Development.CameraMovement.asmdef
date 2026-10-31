@@ -1,0 +1,6 @@
+{
+  "name": "Blackhole.Development.CameraMovement",
+  "rootNamespace": "Blackhole.Development.CameraMovement",
+  "references": ["Blackhole.ModuleSystem.Composition", "Blackhole.SharedKernel.Composition", "Blackhole.CameraController.Contract", "Blackhole.CameraController.Implementation", "VContainer", "UniTask"],
+  "autoReferenced": true
+}

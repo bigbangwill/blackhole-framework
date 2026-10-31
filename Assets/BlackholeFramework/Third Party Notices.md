@@ -7,3 +7,5 @@ Copyright James Newton-King. Distributed under the MIT license. The complete lic
 MessagePipe (including MessagePipe.VContainer) is an external MIT-licensed dependency by Cysharp, Inc. Install it separately using the pinned Git URLs in Version.json.
 
 UniTask, VContainer and Unity packages are external dependencies, installed separately and governed by their respective licenses.
+
+Blackhole.Networking uses the external Unity Transport package and its Collections, Burst and Mathematics dependencies. These packages are installed separately through Unity Package Manager; their source and binaries are not bundled in the framework archive.

@@ -1,14 +1,21 @@
-﻿namespace Blackhole.WorldInteraction.Application
+using UnityEngine;
+
+namespace Blackhole.WorldInteraction.Application
 {
     /// <summary>
     /// Resolves pointer events against world-space interaction targets.
-    /// Implementations preserve press state so subsequent pointer-up and click events
-    /// are dispatched to the targets involved in the matching pointer sequence.
+    /// Implementations capture pressed targets for drag and release events.
     /// </summary>
     public interface IDetectionRaycaster
     {
+        Camera MainCamera { get; }
+
+        void OnBeginDragRaycast(WorldInteractionContext context);
+        void OnDragRaycast(WorldInteractionContext context);
+        void OnEndDragRaycast(WorldInteractionContext context);
+
         /// <summary>
-        /// Dispatches a click to targets hit both when the pointer went down and when it clicked.
+        /// Dispatches an EventSystem click to targets beneath the current pointer.
         /// </summary>
         /// <param name="context">The pointer identity and current screen position.</param>
         void OnPointerClickedRaycast(WorldInteractionContext context);
