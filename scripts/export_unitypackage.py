@@ -77,6 +77,11 @@ def release_contents(asset_path, contents, included_guids):
         text = re.sub(r"^    Url:.*$", "    Url:", text, flags=re.MULTILINE)
     if asset_path.endswith("/EncryptionSaveData/Settings/EncryptionSettingSO.asset"):
         text = re.sub(r"^  key:.*$", "  key: configure-a-project-specific-key", text, flags=re.MULTILINE)
+    if asset_path.endswith("/Networking/Data/NetworkingInstaller.asset") or asset_path.endswith("/Networking/Data/NetworkingServerInstaller.asset"):
+        server = asset_path.endswith("/NetworkingServerInstaller.asset")
+        text = re.sub(r"^  role:.*$", f"  role: {1 if server else 0}", text, flags=re.MULTILINE)
+        text = re.sub(r"^  host:.*$", f"  host: {'0.0.0.0' if server else '127.0.0.1'}", text, flags=re.MULTILINE)
+        text = re.sub(r"^  port:.*$", "  port: 7788", text, flags=re.MULTILINE)
     if SECRET_PATTERN.search(text):
         raise ValueError(f"Credential-like value in release asset: {asset_path}")
     if "Packages/com.bigbang.blackhole-framework" in text:

@@ -1,0 +1,62 @@
+.screen {
+    flex-grow: 1;
+    padding: 24px;
+    align-items: flex-start;
+}
+.panel {
+    width: 410px;
+    max-width: 94%;
+    padding: 20px;
+    border-width: 1px;
+    border-color: #35506a;
+    border-radius: 10px;
+    background-color: rgba(10, 20, 33, 0.95);
+    color: #e8f1fa;
+}
+.eyebrow {
+    font-size: 11px;
+    color: #67d9c6;
+    -unity-font-style: bold;
+    margin-bottom: 6px;
+}
+.title {
+    font-size: 24px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+.instructions {
+    white-space: normal;
+    font-size: 14px;
+    color: #b2c6d9;
+    margin-bottom: 12px;
+}
+.status {
+    font-size: 12px;
+    margin-bottom: 14px;
+    color: #f3cf7b;
+}
+.row {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.control {
+    flex-grow: 1;
+    min-height: 36px;
+    min-width: 70px;
+    margin: 3px;
+    padding: 7px 10px;
+    border-width: 1px;
+    border-color: #35506a;
+    border-radius: 5px;
+    background-color: #1c344a;
+    color: #edf6ff;
+    font-size: 13px;
+}
+.control:hover { background-color: #2a4c68; }
+.control:active { background-color: #3b657c; }
+.hint {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #91a9bf;
+    white-space: normal;
+}

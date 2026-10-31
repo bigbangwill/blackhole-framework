@@ -1,0 +1,16 @@
+{
+    "name": "Blackhole.Networking.Contract",
+    "rootNamespace": "Blackhole.Networking.Contract",
+    "references": [
+        "Blackhole.SharedKernel.Contract"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

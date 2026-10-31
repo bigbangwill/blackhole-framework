@@ -1,0 +1,19 @@
+{
+    "name": "Blackhole.Networking.Composition",
+    "rootNamespace": "Blackhole.Networking.Composition",
+    "references": [
+        "Blackhole.Networking.Contract",
+        "Blackhole.Networking.Infrastructure.UTP",
+        "Blackhole.SharedKernel.Composition",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

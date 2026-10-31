@@ -9,6 +9,12 @@ from export_unitypackage import build_package, collect_assets, release_contents
 
 
 class PackageExportTests(unittest.TestCase):
+    def test_networking_export_uses_default_role_endpoints(self):
+        settings = b"  role: 7\n  host: project-network.example\n  port: 9999\n"
+        for name, role, host in [("NetworkingInstaller", 0, "127.0.0.1"), ("NetworkingServerInstaller", 1, "0.0.0.0")]:
+            exported = release_contents(f"Assets/BlackholeFramework/Networking/Data/{name}.asset", settings, set())
+            self.assertEqual(exported, f"  role: {role}\n  host: {host}\n  port: 7788\n".encode())
+
     def test_configured_game_references_and_session_are_removed(self):
         guid = "a" * 32
         external_guid = "b" * 32

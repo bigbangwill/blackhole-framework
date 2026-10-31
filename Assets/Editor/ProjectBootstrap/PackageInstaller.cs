@@ -19,6 +19,7 @@ namespace Blackhole.Development.Editor
             "com.unity.render-pipelines.universal@17.5.0",
             "com.unity.inputsystem@1.19.0",
             "com.unity.ugui@2.5.0",
+            "com.unity.transport@6.5.0",
             "com.unity.test-framework@1.7.0"
         };
         private static readonly string[] PackagesToRemove =

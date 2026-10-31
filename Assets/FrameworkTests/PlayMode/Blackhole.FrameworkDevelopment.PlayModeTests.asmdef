@@ -20,7 +20,8 @@
     "Blackhole.SharedKernel.Contract",
     "Blackhole.LocalStorageFile.Contract",
     "Unity.ugui",
-    "Blackhole.WorldInteraction.Composition"
+    "Blackhole.WorldInteraction.Composition",
+    "Blackhole.Development.CameraMovement"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

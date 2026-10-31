@@ -4,7 +4,7 @@ A modular Unity framework for composing games from reusable services and scene-b
 
 This repository is the standalone Unity development project. Games install versioned `.unitypackage` releases into `Assets/BlackholeFramework` and track their imported copy in their own repository.
 
-**Current version:** 0.4.0 · **Development editor:** Unity 6000.5.0f1
+**Current version:** 0.5.0 · **Development editor:** Unity 6000.5.0f1
 
 ## Features
 
@@ -15,12 +15,13 @@ This repository is the standalone Unity development project. Games install versi
 | Editor tooling | Module scaffolding, isolated test scenes, generated assembly definitions, root scenes, LifetimeScopes, startup entry points and configuration refresh. |
 | Camera movement | Smooth panning, two-finger orthographic pinch zoom, viewport-aware bounds and configurable movement settings. |
 | Messaging | Typed `IEventPublisher<T>` and `IEventSubscriber<T>` contracts backed by MessagePipe. |
+| Networking | Role-specific Unity Transport clients and servers, reliable payloads, peer events and scope-owned driver lifecycle. |
 | Presentation and input | UI Toolkit components, loading screens, global dialogue, touch input and world interaction. |
 | Game services | Audio playback, REST API clients, authentication, local file storage and encrypted saves. |
 | Rendering | Composite Outline for projects configured with Universal RP. |
 | Distribution | Deterministic framework-only exports, metadata/reference checks, checksums and an asset inventory. |
 
-Version 0.4.0 adds CameraController, pointer-aware drag interaction, isolated module tests, authentication restoration and REST query parameters. Experimental Networking, Unity Transport and game lesson/demo modules are excluded. See the [changelog](CHANGELOG.md) for changes and migration notes.
+Version 0.5.0 adds Blackhole.Networking to the existing camera, interaction and service modules. Multiplayer game logic and lesson/demo modules are excluded. See the [changelog](CHANGELOG.md) for changes and migration notes.
 
 ## Requirements
 
@@ -35,6 +36,7 @@ Use the pinned versions when opening this development project or preparing a rec
 | Universal RP | 17.5.0 |
 | Input System | 1.19.0 |
 | Unity UI | 2.5.0 |
+| Unity Transport | 6.5.0 |
 | Unity Test Framework (development project) | 1.7.0 |
 
 [Packages/manifest.json](Packages/manifest.json) pins the development dependencies. [Version.json](Assets/BlackholeFramework/Version.json) records the release version and consumer dependencies, including required built-in Unity modules. The [installation guide](Assets/BlackholeFramework/README.md#install-dependencies-first) contains the exact Git URLs for Package Manager.
@@ -119,17 +121,17 @@ python -m unittest discover -s scripts -p "test_*.py" -v
 3. Export the framework and verify its import into a receiving Unity project:
 
 ```powershell
-python scripts/export_unitypackage.py --tag v0.4.0 --output dist
+python scripts/export_unitypackage.py --tag v0.5.0 --output dist
 ```
 
 4. Commit and push the tested source changes to `main`, then tag the release commit:
 
 ```powershell
-git tag -a v0.4.0 -m "Blackhole Framework 0.4.0"
-git push origin v0.4.0
+git tag -a v0.5.0 -m "Blackhole Framework 0.5.0"
+git push origin v0.5.0
 ```
 
-The commands illustrate version 0.4.0; substitute the new version before releasing. The tag must equal `v` plus the version in `Version.json`, including any prerelease suffix. Never move or reuse a published tag, and keep generated release files out of Git.
+The commands illustrate version 0.5.0; substitute the new version before releasing. The tag must equal `v` plus the version in `Version.json`, including any prerelease suffix. Never move or reuse a published tag, and keep generated release files out of Git.
 
 The [validation workflow](.github/workflows/validate.yml) runs exporter tests and packages the current version on pushes to `main` and pull requests. The [release workflow](.github/workflows/release.yml) runs on `v[0-9]*` tag pushes and publishes:
 

@@ -4,19 +4,23 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using VContainer;
 
 namespace Blackhole.Development.Tests
 {
     public sealed class FrameworkStartupTests
     {
         [UnityTest]
-        public IEnumerator FrameworkStartsPersistentRootModule()
+        public IEnumerator FrameworkStartsConfiguredPersistentRootModule()
         {
             yield return SceneManager.LoadSceneAsync(FrameworkLifetimeScope.FrameworkScenePath);
+            FrameworkLifetimeScope scope = Object.FindFirstObjectByType<FrameworkLifetimeScope>();
+            var settings = scope.Container.Resolve<BlackholeProjectSettingsSO>();
+            string path = settings.StartingModule.ModuleScene;
             float deadline = Time.realtimeSinceStartup + 20;
-            while (!SmokeRootStartup.Completed && Time.realtimeSinceStartup < deadline) yield return null;
-            Assert.That(SmokeRootStartup.Completed, Is.True, "Framework did not initialize the root module.");
-            var scene = SceneManager.GetSceneByPath("Assets/FrameworkTests/Smoke/FrameworkSmokeScene.unity");
+            while (SceneManager.GetActiveScene().path != path && Time.realtimeSinceStartup < deadline) yield return null;
+            var scene = SceneManager.GetSceneByPath(path);
+            Assert.That(settings.StartingModule.IsPersistant, Is.True);
             Assert.That(scene.IsValid() && scene.isLoaded, Is.True);
             Assert.That(SceneManager.GetActiveScene(), Is.EqualTo(scene));
         }

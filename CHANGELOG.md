@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0 - 2026-10-31
+
+- Add Blackhole.Networking with client/server contracts, reliable Unity Transport adapters, peer and connection events, and configurable role-specific installers.
+- Pin Unity Transport 6.5.0 for the existing Unity 6000.5 development environment.
+- Preserve source networking GUIDs and keep multiplayer game logic and lesson scenes outside the framework import.
+- Add transport-only tests for role isolation, reliable payload delivery, scope lifecycle and server port reuse.
+
+### Migration
+
+Install Unity Transport 6.5.0 before importing this version. Networking requires a payload handler for the chosen role and the existing RuntimeLifecycle installer in the transport's owning scope. Messaging supplies the typed event publishers. Use the client installer or server installer once per session; call Connect after client initialization. The framework starting module and existing game configuration are preserved.
+
 ## 0.4.0 - 2026-10-31
 
 - Add the reusable CameraController module with smooth panning, bounded orthographic pinch zoom, settings and a drag-surface prefab.
