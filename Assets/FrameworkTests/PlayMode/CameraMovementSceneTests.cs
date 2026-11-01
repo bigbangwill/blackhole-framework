@@ -42,7 +42,7 @@ namespace Blackhole.Development.Tests
             Assert.That(view.GetComponent<UIDocument>().rootVisualElement.Q<Button>("reset").resolvedStyle.height, Is.GreaterThan(0));
 
             Vector3 initialPosition = camera.transform.position;
-            var pointer = new PointerEventData(EventSystem.current) { pointerId = 41, position = new Vector2(Screen.width * 0.7f, Screen.height * 0.4f) };
+            var pointer = new PointerEventData(EventSystem.current) { pointerId = 4, position = new Vector2(Screen.width * 0.7f, Screen.height * 0.4f) };
             Canvas.ForceUpdateCanvases();
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointer, hits);

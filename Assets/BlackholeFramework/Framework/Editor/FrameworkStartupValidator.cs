@@ -8,6 +8,8 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 
 namespace Blackhole.Framework.Composition.Editor
 {
@@ -93,6 +95,25 @@ namespace Blackhole.Framework.Composition.Editor
                 .ToArray();
             if (duplicateNames.Length > 0)
                 errors.Add($"Enabled build scenes must have unique names. Duplicates: {string.Join(", ", duplicateNames)}.");
+
+            foreach (EditorBuildSettingsScene buildScene in enabledScenes)
+            {
+                if (settings == null || buildScene.path == settings.FrameworkScene || AssetDatabase.LoadAssetAtPath<SceneAsset>(buildScene.path) == null)
+                    continue;
+                if (settings.ModuleCatalog == null || !settings.ModuleCatalog.ModuleManifests.Any(module => module != null && module.ModuleScene == buildScene.path))
+                    continue;
+
+                var scene = EditorSceneManager.OpenPreviewScene(buildScene.path);
+                try
+                {
+                    if (scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<EventSystem>(true) != null))
+                        errors.Add($"Scene '{buildScene.path}' must use the shared EventSystem in the framework startup scene instead of owning one.");
+                }
+                finally
+                {
+                    EditorSceneManager.ClosePreviewScene(scene);
+                }
+            }
         }
 
         private static void ValidateFrameworkScene(BlackholeProjectSettingsSO settings, List<string> errors)
@@ -103,6 +124,17 @@ namespace Blackhole.Framework.Composition.Editor
             var scene = EditorSceneManager.OpenPreviewScene(settings.FrameworkScene);
             try
             {
+                EventSystem[] eventSystems = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<EventSystem>(true)).ToArray();
+                if (eventSystems.Length != 1)
+                    errors.Add("The framework startup scene must contain exactly one shared EventSystem.");
+                else
+                {
+                    EventSystem eventSystem = eventSystems[0];
+                    InputSystemUIInputModule inputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+                    if (!eventSystem.enabled || !eventSystem.gameObject.activeInHierarchy || inputModule == null || !inputModule.enabled || inputModule.actionsAsset == null)
+                        errors.Add("The framework EventSystem must be active with an enabled InputSystemUIInputModule and assigned input actions.");
+                }
+
                 FrameworkLifetimeScope[] scopes = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<FrameworkLifetimeScope>(true)).ToArray();
                 if (scopes.Length != 1)
                 {

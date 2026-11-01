@@ -2,7 +2,7 @@
 
 Open `Assets/BlackholeFramework/Framework/BlackholeFrameworkScene.unity` and press Play. The framework loads the persistent `Blackhole.Development.CameraMovement` test module, including its CameraController and WorldInteraction dependencies, then activates `CameraMovementTestScene`.
 
-Drag the grid with the mouse or one finger. Use two fingers on a touch device to pinch zoom. The Zoom + and Zoom - buttons provide desktop zoom checks. Pan toward the gold map boundary to verify that the entire camera viewport stays within the map. Pause input to check that gestures stop moving the camera, and Reset to return to the origin.
+Drag the grid with the mouse or one finger. Use the mouse wheel to zoom around the cursor, or two fingers on a touch device to pinch zoom. The Zoom + and Zoom - buttons provide additional desktop zoom checks. Pan toward the gold map boundary to verify that the entire camera viewport stays within the map. Pause input to check that gestures and the wheel stop moving the camera, and Reset to return to the origin.
 
 The HUD shows the camera position, orthographic size and input state. The map contains a cyan origin, grid lines, a gold boundary and colored landmarks. It uses the real injected camera service and the WorldInteraction input canvas.
 

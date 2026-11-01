@@ -105,3 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Blackhole.CameraController.Implementation::Blackhole.CameraController.Implementation.CameraControllerComponent
   _surface: {fileID: 5187036914476355161}
+  _settings: {fileID: 11400000, guid: fc067ce84ae9634408105526a5b9bdf9, type: 2}
+  _cameraInputActions: {fileID: -944628639613478452, guid: 9d1e63b567244b33b50469fe21602e56, type: 3}
+  _scrollZoomSensitivity: 0.15

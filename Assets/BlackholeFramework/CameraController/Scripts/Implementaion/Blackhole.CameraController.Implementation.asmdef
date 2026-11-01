@@ -2,6 +2,7 @@
     "name": "Blackhole.CameraController.Implementation",
     "rootNamespace": "Blackhole.CameraController.Implementation",
     "references": [
+        "Unity.InputSystem",
         "Blackhole.CameraController.Contract",
         "Blackhole.WorldInteraction.Contract",
         "Blackhole.Settings.Contract",

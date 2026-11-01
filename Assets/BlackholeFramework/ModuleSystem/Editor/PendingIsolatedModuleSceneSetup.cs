@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Blackhole.ModuleSystem.Composition;
+using Blackhole.Framework.Composition;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using VContainer.Unity;
 
@@ -94,6 +97,21 @@ namespace Blackhole.Editor
                 serialized.ApplyModifiedPropertiesWithoutUndo();
 
                 Scene scene = scope.gameObject.scene;
+                if (!scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<EventSystem>(true) != null))
+                {
+                    Scene framework = EditorSceneManager.OpenPreviewScene(FrameworkLifetimeScope.FrameworkScenePath);
+                    try
+                    {
+                        EventSystem template = framework.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<EventSystem>(true)).Single();
+                        GameObject eventSystem = UnityEngine.Object.Instantiate(template.gameObject);
+                        eventSystem.name = "Event System";
+                        SceneManager.MoveGameObjectToScene(eventSystem, scene);
+                    }
+                    finally
+                    {
+                        EditorSceneManager.ClosePreviewScene(framework);
+                    }
+                }
                 if (scene.GetRootGameObjects().Any(root => root.GetComponentInChildren<Camera>(true) != null))
                     return;
 

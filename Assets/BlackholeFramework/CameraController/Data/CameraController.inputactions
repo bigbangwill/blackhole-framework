@@ -1,0 +1,34 @@
+{
+    "name": "CameraController",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "ceee8eb9-fb26-4a50-a7dd-eab2ff47df33",
+            "actions": [
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "fdf77bb9-2d98-4991-9152-8ad6742ea357",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "159ea525-a729-4ad1-a972-294239ad71b1",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

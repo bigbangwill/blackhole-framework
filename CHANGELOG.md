@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 - 2026-11-01
+
+- Port reusable CameraController improvements from Adan-Game GIS: cursor-centered mouse-wheel zoom, gradual zoom from initial framing outside configured limits, edit-time boundary previews and surface tracking while input is disabled.
+- Supply a dedicated Camera/Zoom input action on the framework drag-surface prefab without changing existing movement settings or explicit camera activation.
+- Preserve the Configure injection API and support existing custom prefabs without wheel input actions.
+- Add camera regression checks and retain development tooling outside release archives.
+- Move the shared EventSystem and its Input System bindings to the persistent framework startup scene; keep WorldInteraction free of global input ownership.
+- Validate EventSystem ownership and preserve root UI input across module unload/reload; generated isolated tests get a configured EventSystem in their own test root.
+
+### Migration
+
+Keep existing camera settings when upgrading. The supplied drag-surface prefab includes CameraController.inputactions; assign an asset with a Camera/Zoom axis action to custom prefabs to enable wheel zoom. Continue calling ActivateCamera and SetCanInteract explicitly. Cameras initially outside the configured zoom range move gradually toward that range; viewport bounds still take priority. The framework startup scene now supplies the shared EventSystem. Remove duplicate EventSystems from game/module scenes; custom startup scenes must retain one configured EventSystem with InputSystemUIInputModule. Standalone test roots need their own EventSystem.
+
 ## 0.5.0 - 2026-10-31
 
 - Add Blackhole.Networking with client/server contracts, reliable Unity Transport adapters, peer and connection events, and configurable role-specific installers.

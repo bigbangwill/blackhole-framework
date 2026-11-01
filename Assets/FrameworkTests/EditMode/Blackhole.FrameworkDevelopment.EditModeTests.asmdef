@@ -1,6 +1,8 @@
 {
   "name": "Blackhole.FrameworkDevelopment.EditModeTests",
   "references": [
+    "Unity.ugui",
+    "Unity.InputSystem",
     "Blackhole.Framework.Composition",
     "Blackhole.Framework.Editor",
     "Blackhole.ModuleSystem.Composition",

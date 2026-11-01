@@ -6,6 +6,8 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 
 namespace Blackhole.Development.Tests
 {
@@ -35,6 +37,10 @@ namespace Blackhole.Development.Tests
                     Camera camera = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Camera>()).Single();
                     Assert.That(camera.orthographic, Is.True);
                     Assert.That(camera.GetComponent<AudioListener>(), Is.Not.Null);
+                    EventSystem eventSystem = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<EventSystem>(true)).Single();
+                    Assert.That(eventSystem.GetComponent<InputSystemUIInputModule>().actionsAsset, Is.Not.Null);
+                    Assert.That(eventSystem.GetComponent<InputSystemUIInputModule>().point, Is.Not.Null);
+                    Assert.That(eventSystem.gameObject.scene, Is.EqualTo(scene));
                 }
                 finally { EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single); }
             }

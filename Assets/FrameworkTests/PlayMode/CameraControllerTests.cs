@@ -12,6 +12,7 @@ using UnityEngine.TestTools;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using Blackhole.WorldInteraction.Composition;
+using UnityEngine.InputSystem.UI;
 
 namespace Blackhole.Development.Tests
 {
@@ -20,6 +21,8 @@ namespace Blackhole.Development.Tests
         [UnityTest]
         public IEnumerator WorldInputSceneBindsCameraAndDispatchesPointerAwareDrag()
         {
+            GameObject eventSystemObject = EventSystem.current == null ? new GameObject("Test Root EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule)) : null;
+            EventSystem sharedEventSystem = EventSystem.current;
             GameObject[] previousCameras = GameObject.FindGameObjectsWithTag("MainCamera");
             foreach (GameObject previous in previousCameras) previous.tag = "Untagged";
             var cameraObject = new GameObject("World Input Test Camera");
@@ -39,6 +42,7 @@ namespace Blackhole.Development.Tests
                 var presenter = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<DetectionLayerPresenter>()).Single();
                 Assert.That(presenter.GetComponent<Canvas>().worldCamera, Is.EqualTo(camera));
                 Assert.That(EventSystem.current, Is.Not.Null);
+                Assert.That(scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<EventSystem>(true)), Is.Empty);
                 int drags = 0;
                 target.GetComponent<InteractableComponent>().AddDragListener(data => { Assert.That(data.PointerId, Is.EqualTo(9)); drags++; });
                 Physics2D.SyncTransforms();
@@ -54,14 +58,16 @@ namespace Blackhole.Development.Tests
                 presenter.OnPointerUp(pointer);
                 presenter.OnEndDrag(pointer);
                 Assert.That(drags, Is.EqualTo(1));
+                yield return SceneManager.UnloadSceneAsync(scene);
+                Assert.That(EventSystem.current, Is.SameAs(sharedEventSystem), "Unloading WorldInteraction must preserve root UI input.");
             }
             finally
             {
                 Object.Destroy(target);
                 Object.Destroy(cameraObject);
+                if (eventSystemObject != null) Object.Destroy(eventSystemObject);
                 foreach (GameObject previous in previousCameras) if (previous != null) previous.tag = "MainCamera";
             }
-            yield return SceneManager.UnloadSceneAsync(scene);
         }
 
         [UnityTest]

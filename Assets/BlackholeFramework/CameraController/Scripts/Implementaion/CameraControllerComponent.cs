@@ -2,6 +2,7 @@ using Blackhole.CameraController.Contract;
 using Blackhole.WorldInteraction.Contract;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VContainer;
 
 
@@ -14,8 +15,14 @@ namespace Blackhole.CameraController.Implementation
         private CameraMovementSetting _movementSetting;
         [Tooltip("Assign the surface instance in the scene that contains an InteractableComponent.")]
         [SerializeField] private GameObject _surface;
+        [SerializeField] private CameraControllerSettingsSO _settings;
+        [SerializeField] private InputActionAsset _cameraInputActions;
+        [Tooltip("Fractional zoom change per mouse wheel step.")]
+        [SerializeField, Min(0.01f)] private float _scrollZoomSensitivity = 0.15f;
 
         private IInteractionEventSource _input;
+        private InputActionAsset _inputActionsInstance;
+        private InputAction _scrollZoomAction;
 
         private const float PinchThreshold = 8f;
         private readonly Dictionary<int, Vector2> _pointers = new();
@@ -26,15 +33,33 @@ namespace Blackhole.CameraController.Implementation
         private bool _isPinching;
         private float _pinchStartDistance;
         private float _previousPinchDistance;
+        private float _outsideMaxZoomSize;
 
         [Inject]
         public void Configure(CameraControllerSettingsSO settings)
         {
+            _settings = settings;
             CameraMovementSetting(settings.CreateMovementSetting());
+        }
+
+        private void Awake()
+        {
+            if (_settings != null)
+                CameraMovementSetting(_settings.CreateMovementSetting());
         }
 
         private void OnEnable()
         {
+            if (_inputActionsInstance == null && _cameraInputActions != null)
+            {
+                _inputActionsInstance = Instantiate(_cameraInputActions);
+                _scrollZoomAction = _inputActionsInstance.FindAction("Camera/Zoom");
+            }
+
+            if (_cameraInputActions != null && _scrollZoomAction == null)
+                Debug.LogError("Assign the camera input actions asset with a Camera/Zoom action.", this);
+            _scrollZoomAction?.Enable();
+
             if (_surface == null)
                 return;
 
@@ -54,6 +79,7 @@ namespace Blackhole.CameraController.Implementation
 
         private void OnDisable()
         {
+            _scrollZoomAction?.Disable();
             ResetGesture();
             if (_input == null)
                 return;
@@ -64,6 +90,31 @@ namespace Blackhole.CameraController.Implementation
             _input.RemoveDragListener(OnDrag);
             _input.RemoveEndDragListener(OnEndDrag);
             _input = null;
+        }
+
+        private void OnDestroy()
+        {
+            if (_inputActionsInstance != null)
+                Destroy(_inputActionsInstance);
+        }
+
+        private void Update()
+        {
+            if (!_canInteractCamera || _camera == null || !_camera.orthographic || _isPinching
+                || Mouse.current == null || _scrollZoomAction == null)
+                return;
+
+            float scroll = _scrollZoomAction.ReadValue<float>();
+            Vector2 cursor = Mouse.current.position.ReadValue();
+            if (Mathf.Approximately(scroll, 0f) || !_camera.pixelRect.Contains(cursor))
+                return;
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            if (InputSystem.settings.scrollDeltaBehavior == InputSettings.ScrollDeltaBehavior.KeepPlatformSpecificInputRange)
+                scroll /= 120f;
+#endif
+            float factor = Mathf.Pow(1f + Mathf.Max(0.01f, _scrollZoomSensitivity), -scroll);
+            ZoomAt(cursor, _camera.orthographicSize * factor);
         }
 
         private void OnPointerDown(WorldInteractionEventData data)
@@ -170,17 +221,36 @@ namespace Blackhole.CameraController.Implementation
             }
 
             Vector2 midpoint = (first + second) * 0.5f;
-            Vector2 worldBefore = _camera.ScreenToWorldPoint(midpoint);
+            ZoomAt(midpoint, _camera.orthographicSize * _previousPinchDistance / distance);
+            _previousPinchDistance = distance;
+        }
+
+        private void ZoomAt(Vector2 screenPosition, float size)
+        {
+            Vector2 worldBefore = _camera.ScreenToWorldPoint(screenPosition);
             float minSize = Mathf.Max(0.01f, _movementSetting.Min_ZoomIn);
             float maxSize = Mathf.Max(minSize, _movementSetting.Max_ZoomOut);
-            _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize * _previousPinchDistance / distance, minSize, maxSize);
+            float currentSize = _camera.orthographicSize;
+            // A scene may frame its contents outside the configured zoom range.
+            // Allow returning to that framing without snapping on the first input.
+            if (currentSize > maxSize)
+            {
+                _outsideMaxZoomSize = Mathf.Max(_outsideMaxZoomSize, currentSize);
+                _camera.orthographicSize = Mathf.Clamp(size, maxSize, _outsideMaxZoomSize);
+            }
+            else if (currentSize < minSize)
+                _camera.orthographicSize = Mathf.Clamp(size, currentSize, minSize);
+            else
+            {
+                _outsideMaxZoomSize = 0f;
+                _camera.orthographicSize = Mathf.Clamp(size, minSize, maxSize);
+            }
 
             // Fit the viewport before compensating for the zoom around the fingers.
             _camera.transform.position = ClampToBoundary(_camera.transform.position);
-            Vector2 worldAfter = _camera.ScreenToWorldPoint(midpoint);
+            Vector2 worldAfter = _camera.ScreenToWorldPoint(screenPosition);
             _camera.transform.position = ClampToBoundary(_camera.transform.position + (Vector3)(worldBefore - worldAfter));
             _targetPosition = _camera.transform.position;
-            _previousPinchDistance = distance;
             FitSurfaceToCamera();
         }
 
@@ -208,7 +278,9 @@ namespace Blackhole.CameraController.Implementation
             if (Camera.current == null || Camera.current.cameraType != CameraType.SceneView)
                 return;
 
-            Rect boundary = _movementSetting.Boundary;
+            Rect boundary = !Application.isPlaying && _settings != null
+                ? _settings.CreateMovementSetting().Boundary
+                : _movementSetting.Boundary;
             if (boundary.width <= 0f || boundary.height <= 0f)
                 return;
 
@@ -221,12 +293,16 @@ namespace Blackhole.CameraController.Implementation
 
         private void LateUpdate()
         {
-            if (!_canInteractCamera || _camera == null)
+            if (_camera == null)
                 return;
+            if (_canInteractCamera)
+            {
+                _targetPosition = ClampToBoundary(_targetPosition);
+                float blend = _movementSetting.DragSmoothness * Time.deltaTime;
+                _camera.transform.position = ClampToBoundary(Vector3.Lerp(_camera.transform.position, _targetPosition, blend));
+            }
 
-            _targetPosition = ClampToBoundary(_targetPosition);
-            float blend = _movementSetting.DragSmoothness * Time.deltaTime;
-            _camera.transform.position = ClampToBoundary(Vector3.Lerp(_camera.transform.position, _targetPosition, blend));
+            // Other systems can move/zoom the camera or resize its viewport too.
             FitSurfaceToCamera();
         }
 
@@ -273,6 +349,7 @@ namespace Blackhole.CameraController.Implementation
 
         public void ActivateCamera(Camera cam)
         {
+            _outsideMaxZoomSize = 0f;
             _camera = cam;
             ResetGesture();
             if (_camera != null)
@@ -295,6 +372,7 @@ namespace Blackhole.CameraController.Implementation
         }
         public void CameraMovementSetting(CameraMovementSetting setting)
         {
+            _outsideMaxZoomSize = 0f;
             _movementSetting = setting;
             if (_camera != null)
             {

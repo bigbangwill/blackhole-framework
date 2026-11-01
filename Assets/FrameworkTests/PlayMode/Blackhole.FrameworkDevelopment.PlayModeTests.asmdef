@@ -1,6 +1,8 @@
 {
   "name": "Blackhole.FrameworkDevelopment.PlayModeTests",
   "references": [
+    "Blackhole.ModuleSystem.Contract",
+    "Unity.InputSystem",
     "Blackhole.FrameworkDevelopment.Smoke",
     "Blackhole.Framework.Composition",
     "Blackhole.ModuleSystem.Composition",
