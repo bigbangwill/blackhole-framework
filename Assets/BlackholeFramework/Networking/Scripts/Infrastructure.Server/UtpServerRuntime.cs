@@ -8,7 +8,7 @@ using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
-namespace Blackhole.Networking.Infrastructure.UTP
+namespace Blackhole.Networking.Infrastructure.Server
 {
     public sealed class UtpServerRuntime :INetworkServer, IApplicationInit, IApplicationTick, IDisposable
     {

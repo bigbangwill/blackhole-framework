@@ -7,6 +7,17 @@ namespace Blackhole.Development.Tests
 {
     public sealed class RestRequestTests
     {
+        [TestCase("https://example.test/api", "items")]
+        [TestCase("https://example.test/api/", "items")]
+        [TestCase("https://example.test/api", "/items")]
+        [TestCase("https://example.test/api/", "/items")]
+        public void BaseUrlAndEndpointShareExactlyOneSeparator(string baseUrl, string endpoint)
+        {
+            RestRequest request = RestRequest.Get(endpoint, queryParams: new Dictionary<string, string> { ["name"] = "a b" });
+            request.SetBaseUrl(baseUrl);
+            Assert.That(request.FullUrl, Is.EqualTo("https://example.test/api/items?name=a%20b"));
+        }
+
         [TestCase("items", "items?name=a%20b%26c#details")]
         [TestCase("items?sort=id", "items?sort=id&name=a%20b%26c#details")]
         [TestCase("items?", "items?name=a%20b%26c#details")]

@@ -162,3 +162,17 @@ Unknown serialized references, credential-like values, obsolete package paths, d
 - [UI Toolkit Outline Filter](Assets/BlackholeFramework/UIToolkitComponent/OutlineFilter/README.md)
 - [Third-party notices](Assets/BlackholeFramework/Third%20Party%20Notices.md)
 - [Development guidelines](AGENTS.md)
+
+## Editor tools
+
+Open Window > General > Scene Browser for the Scenes tab. Search matches scene paths; the list shows active, loaded and dirty scenes. Double-click opens a scene on its own. Row buttons load/unload scenes additively, and modified scenes retain Unity's save prompts. Scene changes are disabled during Play Mode. Scenes is also registered in Unity's Add Tab menu when the internal pane registry is available.
+
+Assets > Create > C# Class and Assets > Create > Interface create plain C# files from the bundled templates.
+
+Blackhole > Modules > Inspect Root Modules reads catalog manifests marked Is Root Module, resolves their scene assets and finds compiled IRootModuleStartup implementations. New root scaffolds set this flag; mark existing roots explicitly. The inspector checks class presence, not container registration.
+
+To generate game navigation, scaffold a game-owned GameFlow module with Contract, Application and Composition layers first. In the root-module inspector, set its folder and namespace, then Generate Game Flows. This creates navigation interfaces, a loading-screen use case, an installer and (if missing) an abstract RootModuleEntryOption. The generator adds the required assembly references while preserving existing assembly settings. Add the LoadingScreen module dependency to the game module manifest. Generated files are marked and can be updated; handwritten files must be merged or moved first. Game modules and their generated navigation never become part of the framework release.
+
+## Storage errors
+
+ISaveData.SaveData returns Result<StorageSaveResults> so callers can distinguish invalid keys/data, access denial, long paths and storage failures. Nested relative keys are supported; keys cannot escape the configured save directory. SaveEncryptData preserves underlying storage and encryption errors. Existing saves retain the .sav extension and the IV-prefixed AES format. Preserve existing storage settings and encryption keys when upgrading.

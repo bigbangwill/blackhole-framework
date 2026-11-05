@@ -8,5 +8,8 @@
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
+  ],
+  "defineConstraints": [
+    "UNITY_EDITOR"
   ]
 }

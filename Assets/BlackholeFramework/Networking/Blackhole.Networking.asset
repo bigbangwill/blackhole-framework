@@ -9,13 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77a15a9febb8f9d4d9baa309f12e0692, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b375c55cbd3ade4d9a092debcfade4b, type: 3}
   m_Name: Blackhole.Networking
-  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.ModuleManifestSO
+  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.PlatformModuleManifestSO
   moduleID: Blackhole.Networking
-  installer: {fileID: 11400000, guid: 7574372ad6ea1d44a82aa2fe59dc5ffa, type: 2}
+  installer: {fileID: 0}
   moduleScene: 
   isPersistant: 0
   allowChildScopeOverride: 0
   dependencies:
   - {fileID: 11400000, guid: bab9047b8663f5f4da93f024e3d55208, type: 2}
+  _clientInstaller: {fileID: 11400000, guid: 7574372ad6ea1d44a82aa2fe59dc5ffa, type: 2}
+  _serverInstaller: {fileID: 11400000, guid: 3a5ff2d0c43c7fe48a02835c42e383f6, type: 2}

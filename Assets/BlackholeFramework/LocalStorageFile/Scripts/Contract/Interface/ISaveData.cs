@@ -1,24 +1,22 @@
 using Blackhole.SharedKernel.Contract;
-using System;
 namespace Blackhole.LocalStorageFile.Contract
 {
     public interface ISaveData
     {
         /// <summary>
-        /// Serializes the specified object into byte array and saves it using the provided key.
+        /// Saves the supplied bytes using the provided key.
         /// If data with the same key already exists, it is overwritten.
         /// </summary>
-        /// <typeparam name="T">The type of the object to save.</typeparam>
         /// <param name="key">The unique identifier used to store the data.</param>
-        /// <param name="data">The object to serialize and save.</param>
-        public Result SaveData(string key, byte[] data);
+        /// <param name="data">The bytes to save.</param>
+        /// <returns>Success or the storage error that prevented saving.</returns>
+        public Result<StorageSaveResults> SaveData(string key, byte[] data);
 
         /// <summary>
-        /// Loads the data associated with the specified key and deserializes it into the requested type.
+        /// Loads the bytes associated with the specified key.
         /// </summary>
-        /// <typeparam name="T">The type of the object to load.</typeparam>
         /// <param name="key">The unique identifier of the stored data.</param>
-        /// <returns>The deserialized object.</returns>
+        /// <returns>The saved bytes or a storage error.</returns>
         public Result<byte[], StorageSaveResults> LoadData(string key);
 
         /// <summary>

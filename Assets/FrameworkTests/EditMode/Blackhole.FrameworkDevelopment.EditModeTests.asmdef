@@ -24,7 +24,11 @@
     "Blackhole.Authentication.Contract",
     "Blackhole.SharedKernel.Contract",
     "Blackhole.LocalStorageFile.Contract",
-    "Blackhole.FrameworkDevelopment.Smoke"
+    "Blackhole.FrameworkDevelopment.Smoke",
+    "Blackhole.LocalStorageFile.Application",
+    "Blackhole.LocalStorageFile.Infrastructure",
+    "Blackhole.EncryptionSaveData.Application",
+    "Blackhole.EncryptionSaveData.Infrastructure"
   ],
   "includePlatforms": [
     "Editor"

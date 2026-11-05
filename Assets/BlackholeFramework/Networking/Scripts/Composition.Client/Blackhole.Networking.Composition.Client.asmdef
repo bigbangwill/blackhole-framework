@@ -1,9 +1,9 @@
 {
-    "name": "Blackhole.Networking.Composition",
-    "rootNamespace": "Blackhole.Networking.Composition",
+    "name": "Blackhole.Networking.Composition.Client",
+    "rootNamespace": "Blackhole.Networking.Composition.Client",
     "references": [
         "Blackhole.Networking.Contract",
-        "Blackhole.Networking.Infrastructure.UTP",
+        "Blackhole.Networking.Infrastructure.Client",
         "Blackhole.SharedKernel.Composition",
         "VContainer"
     ],
@@ -13,7 +13,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "UNITY_EDITOR || !UNITY_SERVER"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

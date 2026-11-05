@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.0 - 2026-11-06
+
+- Import the Scenes browser with search, scene status, single/additive opening, unloading and Add Tab registration from Adan-Game's CountryRoot/LandRoot branches.
+- Add class/interface creation templates and a root-module inspector with configurable GameFlow source generation into game-owned modules.
+- Mark newly scaffolded root manifests and preserve both base and concrete entry-options registrations across root-module navigation.
+- Port nested save paths, typed storage errors, encryption failure propagation and slash-safe REST URL joining from Adan-Game GIS.
+- Keep current client/server networking assembly separation and role-specific installers; preserve current camera, interaction and shared EventSystem behavior.
+
+### Migration
+
+ISaveData.SaveData now returns Result<StorageSaveResults>. Update custom ISaveData implementations and callers that explicitly declared the old Result return type. Existing file names, encrypted-save layout, endpoint settings and encryption keys are preserved. Set Is Root Module on existing root manifests before using the inspector; new root scaffolds set it automatically. Generate GameFlow code into an existing game module with Contract, Application and Composition layers, using its matching namespace. Handwritten outputs are not overwritten. Use Window > General > Scene Browser to open Scenes; Add Tab registration falls back to this menu when Unity's internal pane registry is unavailable.
+
 ## 0.6.0 - 2026-11-01
 
 - Port reusable CameraController improvements from Adan-Game GIS: cursor-centered mouse-wheel zoom, gradual zoom from initial framing outside configured limits, edit-time boundary previews and surface tracking while input is disabled.

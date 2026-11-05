@@ -147,7 +147,9 @@ namespace Blackhole.ModuleSystem.Composition
                 builder.RegisterInstance(new ModuleSessionInfo(rootModuleID));
                 builder.RegisterInstance(resolverDto);
                 builder.RegisterInstance(new InstalledModules(resolverDto.ModuleIDs, projectScope.Container.Resolve<InstalledModules>()));
-                builder.RegisterInstance<TEntryOptions>(entryOptions);
+                var entryOptionsRegistration = builder.RegisterInstance<TEntryOptions>(entryOptions);
+                if (entryOptions.GetType() != typeof(TEntryOptions))
+                    entryOptionsRegistration.As<TEntryOptions>().As(entryOptions.GetType());
 
                 foreach (var installer in resolverDto.Installers)
                 {

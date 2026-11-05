@@ -52,7 +52,7 @@ namespace Blackhole.Development.Tests
         {
             public bool HasSession;
             public int Saves;
-            public Result SaveData(string key, byte[] data) { Saves++; return Result.Success(); }
+            public Result<StorageSaveResults> SaveData(string key, byte[] data) { Saves++; return Result<StorageSaveResults>.Success(); }
             public Result<byte[], StorageSaveResults> LoadData(string key) => HasSession ? Result<byte[], StorageSaveResults>.Success(new byte[] { 1 }) : Result<byte[], StorageSaveResults>.Failure(StorageSaveResults.NotFound);
             public bool DataExists(string key) => HasSession;
             public Result<StorageSaveResults> DeleteData(string key) => Result<StorageSaveResults>.Success();

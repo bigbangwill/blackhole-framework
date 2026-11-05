@@ -16,7 +16,7 @@ namespace Blackhole.RestApi.Contract
 
         public bool HasBody => !string.IsNullOrWhiteSpace(JsonBody);
 
-        public string FullUrl => _baseUrl + _endpoint;
+        public string FullUrl => GetFullUrl(_baseUrl, _endpoint);
 
         public RestRequest(string endpoint, RestMethod method, IDictionary<string, string> headers = null, string jsonBody = null)
         {
@@ -43,6 +43,14 @@ namespace Blackhole.RestApi.Contract
                 }
             }
             Headers = new Dictionary<string, string>(copiedHeaders);
+        }
+
+        private static string GetFullUrl(string baseUrl, string endpoint)
+        {
+            if (string.IsNullOrEmpty(baseUrl))
+                return endpoint;
+
+            return $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
         }
 
         public void SetBaseUrl(string baseUrl)

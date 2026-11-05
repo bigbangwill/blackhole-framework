@@ -5,9 +5,11 @@ using System.Net;
 using System.Net.Sockets;
 using Blackhole.Messaging.Contract;
 using Blackhole.Networking.Application;
-using Blackhole.Networking.Composition;
+using Blackhole.Networking.Composition.Client;
+using Blackhole.Networking.Composition.Server;
 using Blackhole.Networking.Contract;
 using Blackhole.RuntimeLifecycle.Infrastructure;
+using Blackhole.SharedKernel.Composition;
 using UnityEditor;
 using UnityEngine;
 using VContainer;
@@ -47,7 +49,9 @@ namespace Blackhole.Development.Networking.Tests
         public static void InstallTransport(IContainerBuilder builder, NetworkRole role, ushort port)
         {
             string name = role == NetworkRole.Server ? "NetworkingServerInstaller" : "NetworkingInstaller";
-            var original = AssetDatabase.LoadAssetAtPath<NetworkingInstaller>($"Assets/BlackholeFramework/Networking/Data/{name}.asset");
+            ModuleInstallerSO original = role == NetworkRole.Server
+                ? AssetDatabase.LoadAssetAtPath<NetworkingServerInstaller>($"Assets/BlackholeFramework/Networking/Data/{name}.asset")
+                : AssetDatabase.LoadAssetAtPath<NetworkingClientInstaller>($"Assets/BlackholeFramework/Networking/Data/{name}.asset");
             var copy = UnityEngine.Object.Instantiate(original);
             try
             {

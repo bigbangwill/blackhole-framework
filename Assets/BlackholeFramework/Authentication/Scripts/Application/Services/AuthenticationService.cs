@@ -158,7 +158,7 @@ namespace Blackhole.Authentication.Application
                 var saveResult = _saveData.SaveData(SessionTokenStorageKey, serializeResult.Value);
                 if (saveResult.IsFailure)
                 {
-                    Debug.LogError("Failed to save session token to storage.");
+                    Debug.LogError($"Failed to save session token to storage: {saveResult.Error}");
                 }
             }
             else

@@ -19,20 +19,13 @@ namespace Blackhole.EncryptionSaveData.Application
         /// </summary>
         /// <param name="key">The unique key used to identify the saved data.</param>
         /// <param name="data">The data to encrypt and save.</param>
-        public Result SaveData(string key, byte[] data)
+        public Result<StorageSaveResults> SaveData(string key, byte[] data)
         {
             Result<byte[], StorageSaveResults> encryption = _encryptData.EncryptData(data);
-            if (encryption.IsSuccess)
-            {
-                byte[] encryptedData = encryption.Value;
-                saveData.SaveData(key, encryptedData);
-                return Result.Success();
-            }
-            else
-            {
-                return Result.Failure();
-            }
+            if (encryption.IsFailure)
+                return Result<StorageSaveResults>.Failure(encryption.Error);
 
+            return saveData.SaveData(key, encryption.Value);
         }
 
         /// <summary>
@@ -44,21 +37,10 @@ namespace Blackhole.EncryptionSaveData.Application
         {
             Result<byte[], StorageSaveResults> load = saveData.LoadData(key);
 
-            if (load.Error == StorageSaveResults.NotFound)
-                return Result<byte[], StorageSaveResults>.Failure(StorageSaveResults.NotFound);
+            if (load.IsFailure)
+                return Result<byte[], StorageSaveResults>.Failure(load.Error);
 
-            byte[] encryptedData = load.Value;
-            Result<byte[], StorageSaveResults> decryption = _encryptData.DecryptData(encryptedData);
-            if(decryption.IsSuccess)
-            {
-                byte[] decryptedData = decryption.Value;
-                return Result<byte[], StorageSaveResults>.Success(decryptedData);
-            }
-            else
-            {
-                return Result<byte[], StorageSaveResults>.Failure(StorageSaveResults.DecryptionFail);
-            }
-          
+            return _encryptData.DecryptData(load.Value);
         }
 
         public bool DataExists(string key)
@@ -68,12 +50,7 @@ namespace Blackhole.EncryptionSaveData.Application
 
         public Result<StorageSaveResults> DeleteData(string key)
         {
-            Result<StorageSaveResults> delete = saveData.DeleteData(key);
-
-            if (delete.Error == StorageSaveResults.NotFound)
-                return Result<StorageSaveResults>.Failure(StorageSaveResults.NotFound);
-
-            return Result<StorageSaveResults>.Success();
+            return saveData.DeleteData(key);
         }
     }
 }

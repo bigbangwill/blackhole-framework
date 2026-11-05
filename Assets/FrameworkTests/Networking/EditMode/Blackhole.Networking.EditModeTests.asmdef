@@ -3,7 +3,6 @@
   "references": [
     "Blackhole.Networking.TestSupport",
     "Blackhole.Networking.Contract",
-    "Blackhole.Networking.Composition",
     "Blackhole.SharedKernel.Application",
     "VContainer",
     "Blackhole.SharedKernel.Contract"

@@ -1,0 +1,24 @@
+{
+    "name": "Blackhole.Networking.Infrastructure.Client",
+    "rootNamespace": "Blackhole.Networking.Infrastructure.Client",
+    "references": [
+        "Blackhole.Networking.Application",
+        "Blackhole.Networking.Contract",
+        "Blackhole.SharedKernel.Application",
+        "Blackhole.SharedKernel.Contract",
+        "Blackhole.Messaging.Contract",
+        "Unity.Collections",
+        "Unity.Networking.Transport"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR || !UNITY_SERVER"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

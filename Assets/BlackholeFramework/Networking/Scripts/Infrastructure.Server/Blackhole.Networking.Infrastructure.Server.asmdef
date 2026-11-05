@@ -1,6 +1,6 @@
 {
-    "name": "Blackhole.Networking.Infrastructure.UTP",
-    "rootNamespace": "Blackhole.Networking.Infrastructure.UTP",
+    "name": "Blackhole.Networking.Infrastructure.Server",
+    "rootNamespace": "Blackhole.Networking.Infrastructure.Server",
     "references": [
         "Blackhole.Networking.Application",
         "Blackhole.Networking.Contract",
@@ -16,7 +16,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "UNITY_EDITOR || UNITY_SERVER"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

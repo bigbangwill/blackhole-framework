@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddb7579d2cd41b14fb965760985695cc, type: 3}
+  m_Script: {fileID: 11500000, guid: d7b685b37335fa94192887461361be25, type: 3}
   m_Name: NetworkingInstaller
-  m_EditorClassIdentifier: Blackhole.Networking.Composition::Blackhole.Networking.Composition.NetworkingInstaller
-  role: 0
+  m_EditorClassIdentifier: Blackhole.Networking.Composition.Client::Blackhole.Networking.Composition.Client.NetworkingClientInstaller
   host: 127.0.0.1
   port: 7788

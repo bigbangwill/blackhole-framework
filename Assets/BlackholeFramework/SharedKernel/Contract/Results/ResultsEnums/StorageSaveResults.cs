@@ -9,6 +9,11 @@ namespace Blackhole.LocalStorageFile.Contract
         EncryptionKeyError,
         EncryptionFail,
         DecryptionFail,
-        success
+        success,
+        StorageError,
+        InvalidKey,
+        InvalidData,
+        AccessDenied,
+        PathTooLong
     }
 }

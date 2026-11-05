@@ -1,0 +1,21 @@
+{
+    "name": "Blackhole.Networking.Composition.Server",
+    "rootNamespace": "Blackhole.Networking.Composition.Server",
+    "references": [
+        "Blackhole.Networking.Contract",
+        "Blackhole.Networking.Infrastructure.Server",
+        "Blackhole.SharedKernel.Composition",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR || UNITY_SERVER"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

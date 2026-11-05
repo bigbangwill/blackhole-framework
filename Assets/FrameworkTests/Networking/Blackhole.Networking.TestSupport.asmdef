@@ -3,14 +3,18 @@
   "references": [
     "Blackhole.Networking.Contract",
     "Blackhole.Networking.Application",
-    "Blackhole.Networking.Composition",
     "Blackhole.Messaging.Contract",
     "Blackhole.RuntimeLifecycle.Composition",
     "Blackhole.SharedKernel.Application",
     "VContainer",
-    "Blackhole.SharedKernel.Composition"
+    "Blackhole.SharedKernel.Composition",
+    "Blackhole.Networking.Composition.Client",
+    "Blackhole.Networking.Composition.Server"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
+  ],
+  "defineConstraints": [
+    "UNITY_EDITOR"
   ]
 }

@@ -498,6 +498,8 @@ namespace Blackhole.Editor
             var serializedManifest = new SerializedObject(manifest);
             serializedManifest.FindProperty("moduleID").stringValue = assemblyRoot;
             serializedManifest.FindProperty("moduleScene").stringValue = createScene ? GetSceneAssetPath() : string.Empty;
+            if (isNewManifest || isRootModule)
+                serializedManifest.FindProperty("isRootModule").boolValue = isRootModule;
             if (isNewManifest)
             {
                 serializedManifest.FindProperty("isPersistant").boolValue = false;
