@@ -6,7 +6,9 @@ Blackhole.Networking provides transport contracts and Unity Transport implementa
 
 Install exactly one role per owning container. Data/NetworkingInstaller.asset configures a client; Data/NetworkingServerInstaller.asset configures a server. Each installer registers immutable NetworkSessionOptions and the corresponding transport as a singleton shared by child scopes. Its driver is disposed with the owning scope.
 
-The platform module manifest depends on Blackhole.Messaging and selects the client installer for ordinary players or the server installer when UNITY_SERVER is defined. In the Editor, both installers are available for local client/server tests. The installers reject a second role in one container.
+The platform module manifest depends on Blackhole.Messaging and selects the client installer for ordinary players or the server installer when UNITY_SERVER is defined. In the Editor, it selects the server installer when the instance's Multiplayer Role is Server; Client or Client and Server selects the client installer. Both installers remain available for local client/server tests. The installers reject a second role in one container.
+
+For testing without player builds, open Window > Play Mode > Scenarios, keep the Main Editor as Client and add an Additional Editor Instance with its Multiplayer Role set to Server. Leave Local Instances empty. The Dedicated Server package supplies the role settings; Multiplayer Play Mode runs the additional instance as a virtual Editor player.
 
 ## Assembly separation
 

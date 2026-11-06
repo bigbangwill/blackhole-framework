@@ -2,6 +2,8 @@
   "name": "Blackhole.FrameworkDevelopment.EditModeTests",
   "references": [
     "Unity.ugui",
+    "Unity.DedicatedServer.MultiplayerRoles",
+    "Unity.DedicatedServer.MultiplayerRoles.Editor",
     "Unity.InputSystem",
     "Blackhole.Framework.Composition",
     "Blackhole.Framework.Editor",

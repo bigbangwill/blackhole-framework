@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Blackhole.Framework.Composition.Editor;
 using NUnit.Framework;
@@ -36,6 +37,18 @@ namespace Blackhole.Development.Tests
             Action validate = () => Generator.GetMethod("ValidateNamespace", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { value });
             if (valid) Assert.DoesNotThrow(() => validate());
             else Assert.Throws<TargetInvocationException>(() => validate());
+        }
+
+        [Test]
+        public void SceneBrowserRegistrationPreservesBuiltInTabs()
+        {
+            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            Type hostView = typeof(UnityEditor.EditorWindow).Assembly.GetType("UnityEditor.HostView", true);
+            Type registration = typeof(SceneBrowserWindow).Assembly.GetType("Blackhole.Framework.Composition.Editor.SceneBrowserTabRegistration", true);
+            registration.GetMethod("Register", flags).Invoke(null, null);
+            var builtIn = (IEnumerable<Type>)hostView.GetMethod("GetBuiltInPaneTypes", flags).Invoke(null, null);
+            var registered = (IEnumerable<Type>)hostView.GetMethod("GetDefaultPaneTypes", flags).Invoke(null, null);
+            Assert.That(registered, Is.SupersetOf(builtIn));
         }
 
         [Test]

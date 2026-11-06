@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.2 - 2026-11-06
+
+- Select platform manifest installers from each Editor instance's Multiplayer Role so Multiplayer Play Mode can run a server and clients without player builds. Client and Server together uses the client installer; dedicated server players retain UNITY_SERVER selection.
+- Include Dedicated Server 2.0.2 in framework dependencies for Multiplayer Roles support.
+
 ## 0.7.1 - 2026-11-06
 
 - Exclude Settings editor tools from player compilation.

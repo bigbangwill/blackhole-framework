@@ -9,14 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77a15a9febb8f9d4d9baa309f12e0692, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b375c55cbd3ade4d9a092debcfade4b, type: 3}
   m_Name: Blackhole.Multiplayer
-  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.ModuleManifestSO
+  m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.PlatformModuleManifestSO
   moduleID: Blackhole.Multiplayer
-  installer: {fileID: 11400000, guid: 092f5e93cadc55442a2196efa2a647dd, type: 2}
+  installer: {fileID: 0}
   moduleScene: 
   isRootModule: 0
   isPersistant: 0
   allowChildScopeOverride: 0
   dependencies:
   - {fileID: 11400000, guid: 5a517cb4da97d974a8156b483b49ed16, type: 2}
+  - {fileID: 11400000, guid: 7d2cd526a3872624b95a2e1f95975ed8, type: 2}
+  _clientInstaller: {fileID: 11400000, guid: 7573b283722083e409982684ae2658a7, type: 2}
+  _serverInstaller: {fileID: 11400000, guid: 43d1e6d615a922e4d9219e8a3b2c5d1b, type: 2}

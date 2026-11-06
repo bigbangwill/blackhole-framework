@@ -1,7 +1,7 @@
 # Blackhole Framework development
 
 - Keep reusable framework files under `Assets/BlackholeFramework`. Preserve existing Unity `.meta` GUIDs.
-- Keep test modules, development tooling and example scenes under `Assets/FrameworkTests`; they must not enter release archives.
+- Keep test modules, project-only development tooling and example scenes under `Assets/FrameworkTests`; they must not enter release archives. Keep reusable framework editor tools under `Assets/BlackholeFramework/Framework/Editor`.
 - Keep short, readable expressions and calls on one line. Follow the existing C# formatting.
 - The repository is a standalone Unity project. Do not turn it back into an embedded UPM package or copy game-owned modules into the framework.
 - Use Unity editor APIs to modify serialized assets and scenes. After a change, run the relevant EditMode/PlayMode checks and verify `FrameworkStartupValidator`.

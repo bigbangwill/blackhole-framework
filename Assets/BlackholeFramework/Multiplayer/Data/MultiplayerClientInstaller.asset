@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b5d95b4ff5872a4b863ea7e247e74bb, type: 3}
-  m_Name: MultiplayerInstaller
-  m_EditorClassIdentifier: Blackhole.Multiplayer.Composition::Blackhole.Multiplayer.Composition.MultiplayerInstaller
+  m_Script: {fileID: 11500000, guid: 362534d7f8fb6404cb90c72a78aee253, type: 3}
+  m_Name: MultiplayerClientInstaller
+  m_EditorClassIdentifier: Blackhole.Multiplayer.Composition.Client::Blackhole.Multiplayer.Composition.Client.MultiplayerClientInstaller
