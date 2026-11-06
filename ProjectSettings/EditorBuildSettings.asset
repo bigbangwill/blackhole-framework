@@ -26,5 +26,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BlackholeFramework/WorldInteraction/WorldInteractionScene.unity
     guid: 72fe6adeac0c6c84b967adab7d36475a
+  - enabled: 1
+    path: Assets/FrameworkTests/Isolated/Blackhole.Multiplayer/MultiplayerTest.unity
+    guid: 38f3959760e991b4ebdcfe6554a3735b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

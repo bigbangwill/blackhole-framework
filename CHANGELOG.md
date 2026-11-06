@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 - 2026-11-06
+
+- Exclude Settings editor tools from player compilation.
+- Compile only the selected platform manifest installer field into each player, keeping both authoring references available in the Editor.
+- Add full-build isolation verification tooling under FrameworkTests; verification probes require an explicit build-only define and are excluded from releases.
+
 ## 0.7.0 - 2026-11-06
 
 - Import the Scenes browser with search, scene status, single/additive opening, unloading and Add Tab registration from Adan-Game's CountryRoot/LandRoot branches.

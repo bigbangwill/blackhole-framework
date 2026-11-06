@@ -1,0 +1,17 @@
+{
+  "name": "Blackhole.Development.BuildIsolation",
+  "references": [
+    "Blackhole.Framework.Composition",
+    "Blackhole.ModuleSystem.Composition",
+    "Blackhole.Networking.Contract",
+    "Blackhole.Networking.Application",
+    "Blackhole.SharedKernel.Application",
+    "Blackhole.SharedKernel.Contract",
+    "Blackhole.SharedKernel.Composition",
+    "Blackhole.Messaging.Contract",
+    "VContainer"
+  ],
+  "defineConstraints": [
+    "BLACKHOLE_BUILD_AUDIT"
+  ]
+}
