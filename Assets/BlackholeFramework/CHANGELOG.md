@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.3 - 2026-11-07
+
+- Load scenes from the framework dependency graph additively under the framework scope before starting the first game root. GameFlow navigation waits for framework scene startup and leaves framework dependency scenes loaded when switching roots.
+
 ## 0.7.1 - 2026-11-06
 
 - Exclude Settings editor tools from player compilation.

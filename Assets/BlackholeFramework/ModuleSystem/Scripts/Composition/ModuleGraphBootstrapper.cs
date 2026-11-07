@@ -1,11 +1,20 @@
 using System;
 using VContainer;
+using VContainer.Unity;
 
 namespace Blackhole.ModuleSystem.Composition
 {
     /// <summary>Installs a resolved module graph into a container scope.</summary>
     public static class ModuleGraphBootstrapper
     {
+        /// <summary>Installs the graph and starts loading its scenes when the owning scope starts.</summary>
+        public static ResolverDto InstallAndLoadScenes(IContainerBuilder builder, string rootModuleId, ModuleManifestCatalogSO moduleCatalog, InstalledModules inheritedModules = null)
+        {
+            ResolverDto resolverDto = Install(builder, rootModuleId, moduleCatalog, inheritedModules);
+            builder.RegisterEntryPoint<ModuleGraphStartup>().AsSelf().WithParameter(resolverDto);
+            return resolverDto;
+        }
+
         public static ResolverDto Install(IContainerBuilder builder, string rootModuleId, ModuleManifestCatalogSO moduleCatalog, InstalledModules inheritedModules = null)
         {
             if (builder == null)

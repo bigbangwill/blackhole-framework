@@ -34,7 +34,7 @@ namespace Blackhole.Framework.Composition
             ScopeCancellationInstaller.Install(builder);
             builder.RegisterInstance(projectSettings);
 
-            ModuleGraphBootstrapper.Install(builder, FrameworkModuleId, projectSettings.ModuleCatalog);
+            ModuleGraphBootstrapper.InstallAndLoadScenes(builder, FrameworkModuleId, projectSettings.ModuleCatalog);
         }
     }
 }

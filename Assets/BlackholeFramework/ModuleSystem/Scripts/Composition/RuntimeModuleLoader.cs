@@ -42,6 +42,9 @@ namespace Blackhole.ModuleSystem.Composition
             if (entryOptions == null)
                 throw new ArgumentNullException(nameof(entryOptions));
 
+            if (projectScope.Container.TryResolve<ModuleGraphStartup>(out var graphStartup))
+                await graphStartup.WaitUntilReadyAsync(cancellationToken);
+
             await UnloadCurrentRootModuleAsync(cancellationToken);
 
             InstalledModules parentModules = projectScope.Container.Resolve<InstalledModules>();
