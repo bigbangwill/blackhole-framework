@@ -19,6 +19,7 @@ namespace Blackhole.Multiplayer.Application.Server
         {
             _connectedSub = connectedSub.Subscribe(OnPlayerConnected);
             _disconnectedSub = disconnectedSub.Subscribe(OnPlayerDisconnected);
+            Debug.Log("Staretdf");
         }
         
         private void OnPlayerConnected(NetworkPeerConnected connected)

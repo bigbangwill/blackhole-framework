@@ -1,3 +1,4 @@
+using Blackhole.Multiplayer.Application.Server;
 using Blackhole.SharedKernel.Composition;
 using UnityEngine;
 using VContainer;
@@ -9,7 +10,8 @@ namespace Blackhole.Multiplayer.Composition.Server
     {
         public override void InstallModule(IContainerBuilder builder)
         {
-            
+            builder.Register<ConnectedPlayerRegistry>(Lifetime.Singleton);
+            builder.RegisterBuildCallback(resolver => resolver.Resolve<ConnectedPlayerRegistry>());
         }
     }
 }

@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/BlackholeFramework/Framework/BlackholeFrameworkScene.unity
     guid: 720e5b917dcddfe4e9c28bb4138fdaa7
   - enabled: 1
+    path: Assets/Test/JoinTest/JoinTest.unity
+    guid: 5a03b907acabe1b41ba08f1b21d88f4a
+  - enabled: 1
     path: Assets/FrameworkTests/CameraMovement/CameraMovementTestScene.unity
     guid: 5a6e9692b1a2613409335fad67009195
   - enabled: 1
@@ -29,5 +32,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/FrameworkTests/Isolated/Blackhole.Multiplayer/MultiplayerTest.unity
     guid: 38f3959760e991b4ebdcfe6554a3735b
+  - enabled: 1
+    path: Assets/FrameworkTests/Isolated/Blackhole.JoinTest/JoinTestTest.unity
+    guid: c6a8286143f60504f80ee906b9adc2ec
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

@@ -1,6 +1,4 @@
-using Blackhole.Networking.Contract;
-
-namespace Blackhole.Networking.Application
+namespace Blackhole.Networking.Contract
 {
     public interface INetworkPayloadHandler
     {

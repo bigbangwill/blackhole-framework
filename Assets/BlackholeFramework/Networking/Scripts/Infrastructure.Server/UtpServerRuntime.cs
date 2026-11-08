@@ -1,5 +1,4 @@
 using Blackhole.Messaging.Contract;
-using Blackhole.Networking.Application;
 using Blackhole.Networking.Contract;
 using Blackhole.SharedKernel.Application;
 using System;

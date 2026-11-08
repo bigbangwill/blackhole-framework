@@ -1,9 +1,7 @@
 {
-    "name": "Blackhole.Networking.Application",
-    "rootNamespace": "Blackhole.Networking.Application",
-    "references": [
-        "Blackhole.Networking.Contract"
-    ],
+    "name": "Blackhole.JoinTest.Domain",
+    "rootNamespace": "Blackhole.JoinTest.Domain",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

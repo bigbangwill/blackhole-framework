@@ -8,7 +8,6 @@ using System.Reflection;
 using Blackhole.Framework.Composition;
 using Blackhole.Messaging.Contract;
 using Blackhole.ModuleSystem.Composition;
-using Blackhole.Networking.Application;
 using Blackhole.Networking.Contract;
 using Blackhole.SharedKernel.Application;
 using Blackhole.SharedKernel.Composition;

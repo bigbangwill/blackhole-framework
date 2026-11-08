@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using Blackhole.Messaging.Contract;
-using Blackhole.Networking.Application;
 using Blackhole.Networking.Composition.Client;
 using Blackhole.Networking.Composition.Server;
 using Blackhole.Networking.Contract;

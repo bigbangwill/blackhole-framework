@@ -15,6 +15,7 @@ MonoBehaviour:
   moduleID: Blackhole.Networking
   installer: {fileID: 0}
   moduleScene: 
+  isRootModule: 0
   isPersistant: 0
   allowChildScopeOverride: 0
   dependencies:

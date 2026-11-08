@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Blackhole.ModuleSystem.Composition::Blackhole.ModuleSystem.Composition.ModuleManifestSO
   moduleID: Blackhole.Framework
   installer: {fileID: 11400000, guid: 8579dd23ccbb6244799cf41d5b574268, type: 2}
-  moduleScene: Assets/BlackholeFramework/Framework/BlackholeFrameworkScene.unity
+  moduleScene: Assets/Test/JoinTest/JoinTest.unity
+  isRootModule: 0
   isPersistant: 1
   allowChildScopeOverride: 0
   dependencies:
   - {fileID: 11400000, guid: 5a517cb4da97d974a8156b483b49ed16, type: 2}
   - {fileID: 11400000, guid: 3fabe5db1856425c8e9862332d833596, type: 2}
   - {fileID: 11400000, guid: bab9047b8663f5f4da93f024e3d55208, type: 2}
+  - {fileID: 11400000, guid: b9474215f492d3540895df446ead5e04, type: 2}

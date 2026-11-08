@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BlackholeProjectSettings
   m_EditorClassIdentifier: Blackhole.Framework.Composition::Blackhole.Framework.Composition.BlackholeProjectSettingsSO
   moduleCatalog: {fileID: 11400000, guid: 5211e22892297974482803d87bf4a1a1, type: 2}
-  startingModule: {fileID: 11400000, guid: 7498d16e3f8df8647934bde754e5063e, type: 2}
+  startingModule: {fileID: 11400000, guid: 42fec58573df8984e83d361d34fb2e95, type: 2}
   frameworkScene: Assets/BlackholeFramework/Framework/BlackholeFrameworkScene.unity

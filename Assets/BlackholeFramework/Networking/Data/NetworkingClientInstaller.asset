@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7b685b37335fa94192887461361be25, type: 3}
-  m_Name: NetworkingInstaller
+  m_Name: NetworkingClientInstaller
   m_EditorClassIdentifier: Blackhole.Networking.Composition.Client::Blackhole.Networking.Composition.Client.NetworkingClientInstaller
   host: 127.0.0.1
   port: 7788

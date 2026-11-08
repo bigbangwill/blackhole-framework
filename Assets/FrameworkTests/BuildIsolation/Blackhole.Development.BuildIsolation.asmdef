@@ -4,7 +4,6 @@
     "Blackhole.Framework.Composition",
     "Blackhole.ModuleSystem.Composition",
     "Blackhole.Networking.Contract",
-    "Blackhole.Networking.Application",
     "Blackhole.SharedKernel.Application",
     "Blackhole.SharedKernel.Contract",
     "Blackhole.SharedKernel.Composition",

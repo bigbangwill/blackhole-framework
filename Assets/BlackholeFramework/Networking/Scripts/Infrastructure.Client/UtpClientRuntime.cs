@@ -1,5 +1,4 @@
 using Blackhole.Messaging.Contract;
-using Blackhole.Networking.Application;
 using Blackhole.Networking.Contract;
 using Blackhole.SharedKernel.Application;
 using Blackhole.SharedKernel.Contract;
@@ -58,7 +57,7 @@ namespace Blackhole.Networking.Infrastructure.Client
                 {
                     SetState(NetworkConnectionState.Connected);
                 }
-                else if(networkEvent == NetworkEvent.Type.Disconnect)
+                else if (networkEvent == NetworkEvent.Type.Disconnect)
                 {
                     _connection = default;
                     SetState(NetworkConnectionState.Disconnected);
@@ -90,13 +89,13 @@ namespace Blackhole.Networking.Infrastructure.Client
 
         public Result Connect(NetworkAddress address)
         {
-            if(_disposed || !_driver.IsCreated || _state != NetworkConnectionState.Disconnected)
+            if (_disposed || !_driver.IsCreated || _state != NetworkConnectionState.Disconnected)
                 return Result.Failure();
 
-            if(string.IsNullOrEmpty(address.Host) || address.Port == 0)
+            if (string.IsNullOrEmpty(address.Host) || address.Port == 0)
                 return Result.Failure();
 
-            if(!NetworkEndpoint.TryParse(address.Host, address.Port, out var endpoint))
+            if (!NetworkEndpoint.TryParse(address.Host, address.Port, out var endpoint))
                 return Result.Failure();
 
             _connection = _driver.Connect(endpoint);
@@ -114,7 +113,7 @@ namespace Blackhole.Networking.Infrastructure.Client
             if (_disposed || !_driver.IsCreated)
                 return Result.Failure();
 
-            if(!_connection.IsCreated)
+            if (!_connection.IsCreated)
                 return Result.Success();
 
             _connection.Disconnect(_driver);
@@ -141,7 +140,7 @@ namespace Blackhole.Networking.Infrastructure.Client
 
         public Result Send(NetworkPayload payload)
         {
-            if (_state != NetworkConnectionState.Connected) 
+            if (_state != NetworkConnectionState.Connected)
                 return Result.Failure();
 
             var result = _driver.BeginSend(_reliablePipeline, _connection, out var writer, payload.Data.Length);

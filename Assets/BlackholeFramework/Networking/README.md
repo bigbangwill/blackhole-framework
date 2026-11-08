@@ -14,11 +14,11 @@ For testing without player builds, open Window > Play Mode > Scenarios, keep the
 
 Scripts/Composition.Client and Scripts/Composition.Server contain NetworkingClientInstaller and NetworkingServerInstaller. Each installer inherits directly from ModuleInstallerSO, owns its endpoint configuration and references only its matching infrastructure assembly.
 
-Scripts/Infrastructure.Client contains UtpClientRuntime; Scripts/Infrastructure.Server contains UtpServerRuntime. Their assembly names and namespaces are Blackhole.Networking.Infrastructure.Client and Blackhole.Networking.Infrastructure.Server. Contract and Application remain shared. There is no shared networking composition or transport implementation assembly.
+Scripts/Infrastructure.Client contains UtpClientRuntime; Scripts/Infrastructure.Server contains UtpServerRuntime. Their assembly names and namespaces are Blackhole.Networking.Infrastructure.Client and Blackhole.Networking.Infrastructure.Server. The Contract assembly remains shared. There is no shared networking composition or transport implementation assembly.
 
 Client composition and infrastructure assemblies require UNITY_EDITOR || !UNITY_SERVER. Server composition and infrastructure assemblies require UNITY_EDITOR || UNITY_SERVER. Both roles compile in the Editor, while player compilation includes only the matching role. Use the Dedicated Server build subtarget to define UNITY_SERVER; selecting a desktop operating system alone does not select the networking role. Networking tests run in the Editor because they exercise both roles in one process. PlatformModuleManifestSO uses matching compile guards on its serialized fields: both references remain editable in the Editor, but each player contains only its selected installer field and asset dependency.
 
-Register INetworkClientPayloadHandler for a client, or INetworkPayloadHandler for a server. Register these alongside the transport in its owning scope. Application-specific handlers are supplied by the receiving game.
+Implement the payload handler for your role from Blackhole.Networking.Contract: INetworkClientPayloadHandler for a client or INetworkPayloadHandler for a server. Register these alongside the transport in its owning scope. Application-specific handlers are supplied by the receiving game.
 
 Install the existing RuntimeLifecyleInstaller in the same scope as the transport. Its ContainerLocal collections initialize and tick local IApplicationInit/IApplicationTick implementations. An ancestor's lifecycle runner does not tick services registered in a child scope. Messaging must provide the connection/peer IEventPublisher contracts through that scope or its ancestors.
 
