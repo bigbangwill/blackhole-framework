@@ -1,4 +1,5 @@
 using Blackhole.CameraController.Implementation;
+using Blackhole.WorldInteraction.Presentation;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Blackhole.Development.Tests
             Assert.That(zoom.bindings[0].path, Is.EqualTo("<Mouse>/scroll/y"));
             Assert.That(controller.FindProperty("_settings").objectReferenceValue, Is.EqualTo(AssetDatabase.LoadAssetAtPath<CameraControllerSettingsSO>(root + "/Data/CameraControllerSettings.asset")));
             Assert.That(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(actions)), Is.EqualTo("9d1e63b567244b33b50469fe21602e56"));
+            Assert.That(prefab.GetComponent<InteractableComponent>().ReceiveAlongsideTarget, Is.True);
         }
     }
 }

@@ -2,6 +2,14 @@ using UnityEngine;
 
 namespace Blackhole.WorldInteraction.Contract
 {
+    /// <summary>The mouse button or touch input that triggered an interaction.</summary>
+    public enum InteractionPointerButton
+    {
+        Left,
+        Right,
+        Middle
+    }
+
     /// <summary>
     /// Public event payload emitted by an interaction source.
     /// </summary>
@@ -14,6 +22,8 @@ namespace Blackhole.WorldInteraction.Contract
 
         /// <summary>Gets the identifier of the pointer that generated the event.</summary>
         public int PointerId { get; }
+
+        public InteractionPointerButton PointerButton { get; }
 
         /// <summary>Legacy name for the target-hit flag; this does not report UI hover.</summary>
         public bool IsPointerOverUI { get; }
@@ -30,10 +40,14 @@ namespace Blackhole.WorldInteraction.Contract
         /// <param name="pointerId">The identifier supplied by the EventSystem.</param>
         /// <param name="isPointerOverUI">Indicates whether the released pointer still hits this target.</param>
         public WorldInteractionEventData(Vector2 screenPosition, int pointerId, bool isPointerOverUI = false)
+            : this(screenPosition, pointerId, isPointerOverUI, InteractionPointerButton.Left) { }
+
+        public WorldInteractionEventData(Vector2 screenPosition, int pointerId, bool isPointerOverUI, InteractionPointerButton pointerButton)
         {
             ScreenPosition = screenPosition;
             PointerId = pointerId;
             IsPointerOverUI = isPointerOverUI;
+            PointerButton = pointerButton;
         }
     }
 }

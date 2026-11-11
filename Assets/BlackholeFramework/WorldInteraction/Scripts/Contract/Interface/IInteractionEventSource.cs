@@ -54,5 +54,11 @@ namespace Blackhole.WorldInteraction.Contract
         /// <summary>Removes a listener from end-drag events.</summary>
         /// <param name="listener">The listener to remove.</param>
         void RemoveEndDragListener(Action<WorldInteractionEventData> listener);
+
+        /// <summary>Subscribes to deselection on sources that track selection.</summary>
+        void AddDeselectListener(Action<WorldInteractionEventData> listener) { }
+
+        /// <summary>Unsubscribes from deselection.</summary>
+        void RemoveDeselectListener(Action<WorldInteractionEventData> listener) { }
     }
 }

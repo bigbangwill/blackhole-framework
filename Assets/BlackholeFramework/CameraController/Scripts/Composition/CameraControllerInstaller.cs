@@ -17,14 +17,8 @@ namespace Blackhole.CameraController.Composition
         {
             builder.RegisterInstance(RequireAsset(settings, nameof(settings)));
             builder.RegisterComponentInNewPrefab(RequireAsset(controllerPrefab, nameof(controllerPrefab)), Lifetime.Singleton)
-                .UnderTransform(GetCameraTransform)
+                .UnderTransform(resolver => resolver.TryResolve<LifetimeScope>(out var scope) ? scope.transform : null)
                 .AsSelf().As<ICameraController>();
-        }
-
-        private static Transform GetCameraTransform()
-        {
-            Camera camera = Camera.main;
-            return camera != null ? camera.transform : null;
         }
     }
 }

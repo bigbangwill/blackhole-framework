@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Blackhole.CameraController.Implementation;
 using Blackhole.Framework.Composition.Editor;
+using Blackhole.WorldInteraction.Presentation;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -44,6 +45,10 @@ namespace Blackhole.Development.Editor
                 controller.FindProperty("_settings").objectReferenceValue = AssetDatabase.LoadAssetAtPath<CameraControllerSettingsSO>(Root + "/Data/CameraControllerSettings.asset");
                 controller.FindProperty("_cameraInputActions").objectReferenceValue = inputActions;
                 controller.ApplyModifiedPropertiesWithoutUndo();
+                var interaction = new SerializedObject(prefab.GetComponent<InteractableComponent>());
+                interaction.FindProperty("_passThrough").boolValue = true;
+                interaction.FindProperty("_receiveAlongsideTarget").boolValue = true;
+                interaction.ApplyModifiedPropertiesWithoutUndo();
                 PrefabUtility.SaveAsPrefabAsset(prefab, prefabPath);
             }
             finally

@@ -5,6 +5,8 @@
     "Unity.InputSystem",
     "Blackhole.FrameworkDevelopment.Smoke",
     "Blackhole.Framework.Composition",
+    "Blackhole.AudioPlayer.Application",
+    "Blackhole.AudioPlayer.Infrastructure",
     "Blackhole.ModuleSystem.Composition",
     "VContainer",
     "UniTask",

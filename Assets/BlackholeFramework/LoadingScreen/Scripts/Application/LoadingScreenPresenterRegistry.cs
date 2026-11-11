@@ -1,7 +1,6 @@
 using System;
 using Blackhole.LoadingScreen.Contract;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace Blackhole.LoadingScreen.Application
 {
@@ -18,12 +17,22 @@ namespace Blackhole.LoadingScreen.Application
 
         public UniTask FadeOut(LoadingScreenType type) => GetPresenter().FadeOut(type);
 
-        private ILoadingScreenPresenter GetPresenter()
-        {
-            if (_presenter is UnityEngine.Object unityObject && unityObject == null)
-                _presenter = null;
+        public UniTask OpenTransitionAsync() => GetPresenter().OpenTransitionAsync();
 
-            return _presenter ?? throw new InvalidOperationException("The project loading scene has not registered its presenter.");
+        public UniTask CloseTransitionAsync() => CurrentPresenter?.CloseTransitionAsync() ?? UniTask.CompletedTask;
+
+        private ILoadingScreenPresenter GetPresenter() => CurrentPresenter
+            ?? throw new InvalidOperationException("The project loading scene has not registered its presenter.");
+
+        private ILoadingScreenPresenter CurrentPresenter
+        {
+            get
+            {
+                if (_presenter is UnityEngine.Object unityObject && unityObject == null)
+                    _presenter = null;
+
+                return _presenter;
+            }
         }
     }
 }

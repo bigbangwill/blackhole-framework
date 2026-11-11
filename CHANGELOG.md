@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.0 - 2026-11-11
+
+- Expose pointer buttons and route WorldInteraction hits by renderer priority, with pass-through targets, deselection and click suppression after drags.
+- Attach the drag surface to the active camera and restore its original parent on deactivation. Camera dragging uses left mouse and touch input.
+- Add spinner-backed async loading transitions and use them in generated GameFlow navigation.
+- Add audio pause and resume, preserve playback on repeated requests for the same music clip and synchronize slider changes with mute settings.
+- Generate GameFlow into `.g.cs` files with a separate Unity installer declaration. Existing generated scripts retain their GUIDs and both navigation interfaces.
+
+### Migration
+
+Select **Receive Alongside Target** on custom camera drag surfaces so they receive input behind selectable objects. Enable **Pass Through** on other targets that should let input reach lower-priority targets. Use `PauseAll` and `ResumeAll` to retain audio playback position. Regenerate GameFlow from **Blackhole > Modules > Inspect Root Modules** to update the generated files.
+
 ## 0.7.2 - 2026-11-06
 
 - Select platform manifest installers from each Editor instance's Multiplayer Role so Multiplayer Play Mode can run a server and clients without player builds. Client and Server together uses the client installer; dedicated server players retain UNITY_SERVER selection.
