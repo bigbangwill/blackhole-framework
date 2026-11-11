@@ -7,5 +7,7 @@ namespace Blackhole.LoadingScreen.Application
     {
         UniTask FadeIn(LoadingScreenType type);
         UniTask FadeOut(LoadingScreenType type);
+        UniTask OpenTransitionAsync() => FadeIn(LoadingScreenType.Black);
+        UniTask CloseTransitionAsync() => FadeOut(LoadingScreenType.Black);
     }
 }

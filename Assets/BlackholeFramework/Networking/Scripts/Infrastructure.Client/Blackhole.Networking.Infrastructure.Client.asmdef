@@ -2,7 +2,6 @@
     "name": "Blackhole.Networking.Infrastructure.Client",
     "rootNamespace": "Blackhole.Networking.Infrastructure.Client",
     "references": [
-        "Blackhole.Networking.Application",
         "Blackhole.Networking.Contract",
         "Blackhole.SharedKernel.Application",
         "Blackhole.SharedKernel.Contract",

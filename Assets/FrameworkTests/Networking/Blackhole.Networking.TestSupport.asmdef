@@ -2,7 +2,6 @@
   "name": "Blackhole.Networking.TestSupport",
   "references": [
     "Blackhole.Networking.Contract",
-    "Blackhole.Networking.Application",
     "Blackhole.Messaging.Contract",
     "Blackhole.RuntimeLifecycle.Composition",
     "Blackhole.SharedKernel.Application",

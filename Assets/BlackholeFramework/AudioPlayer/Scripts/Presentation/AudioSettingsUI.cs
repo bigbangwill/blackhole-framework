@@ -78,10 +78,9 @@ namespace Blackhole.AudioPlayer.Presentation
             slider.onValueChanged.AddListener(value =>
             {
                 // Changing volume automatically unmutes the channel.
-                if (toggle.isOn)
-                    toggle.SetIsOnWithoutNotify(false);
-
                 onVolumeChanged(value);
+                if (toggle.isOn)
+                    toggle.isOn = false;
             });
 
 

@@ -46,13 +46,14 @@ namespace Blackhole.Development.Tests
                 int drags = 0;
                 target.GetComponent<InteractableComponent>().AddDragListener(data => { Assert.That(data.PointerId, Is.EqualTo(9)); drags++; });
                 Physics2D.SyncTransforms();
-                var pointer = new PointerEventData(EventSystem.current) { position = camera.WorldToScreenPoint(Vector3.zero), pointerId = 9 };
+                var pointer = new PointerEventData(EventSystem.current) { position = camera.WorldToScreenPoint(Vector3.zero), pointerId = 9, eligibleForClick = true };
                 Canvas.ForceUpdateCanvases();
                 var hits = new List<RaycastResult>();
                 EventSystem.current.RaycastAll(pointer, hits);
                 Assert.That(hits.Any(hit => hit.gameObject == presenter.gameObject), Is.True, "The transparent input canvas must remain raycastable.");
                 presenter.OnPointerDown(pointer);
                 presenter.OnBeginDrag(pointer);
+                Assert.That(pointer.eligibleForClick, Is.False);
                 pointer.position += new Vector2(100, 0);
                 presenter.OnDrag(pointer);
                 presenter.OnPointerUp(pointer);
@@ -91,6 +92,14 @@ namespace Blackhole.Development.Tests
             try
             {
                 Vector2 start = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+                Assert.That(surface.transform.parent, Is.SameAs(camera.transform));
+                var rightDown = new WorldInteractionContext(start, 1, WorldInteractionPointerButton.Right);
+                interaction.OnPointerDown(rightDown);
+                interaction.OnBeginDrag(rightDown);
+                interaction.OnDrag(new WorldInteractionContext(start + new Vector2(100, 0), 1, WorldInteractionPointerButton.Right));
+                yield return null;
+                Assert.That(camera.transform.position.x, Is.Zero);
+                interaction.OnPointerUp(rightDown, true);
                 interaction.OnPointerDown(new WorldInteractionContext(start, 1));
                 interaction.OnBeginDrag(new WorldInteractionContext(start, 1));
                 Vector2 end = start + new Vector2(100, 0);
@@ -117,6 +126,8 @@ namespace Blackhole.Development.Tests
                 interaction.OnDrag(new WorldInteractionContext(start, 2));
                 yield return null;
                 Assert.That(camera.transform.position, Is.EqualTo(stopped));
+                controller.DeActivateCamera();
+                Assert.That(surface.transform.parent, Is.Null);
             }
             finally
             {

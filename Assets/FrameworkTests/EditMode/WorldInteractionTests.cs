@@ -4,7 +4,9 @@ using Blackhole.WorldInteraction.Contract;
 using Blackhole.WorldInteraction.Infrastructure;
 using Blackhole.WorldInteraction.Presentation;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Blackhole.Development.Tests
 {
@@ -79,6 +81,55 @@ namespace Blackhole.Development.Tests
             interaction.AddPointerClickedListener(data => clicks++);
             raycaster.OnPointerClickedRaycast(Context(new Vector2(2, 1), 4));
             Assert.That(clicks, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SortingGroupSelectsTheFrontTargetAndKeepsTheCameraSurfaceInTheRoute()
+        {
+            var front = new GameObject("Front Target", typeof(SortingGroup), typeof(BoxCollider2D), typeof(InteractableComponent));
+            var surface = new GameObject("Drag Surface", typeof(BoxCollider2D), typeof(InteractableComponent));
+            try
+            {
+                front.layer = surface.layer = target.layer;
+                front.GetComponent<SortingGroup>().sortingOrder = 5;
+                var dragSurface = surface.GetComponent<InteractableComponent>();
+                var serialized = new SerializedObject(dragSurface);
+                serialized.FindProperty("_receiveAlongsideTarget").boolValue = true;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                Physics2D.SyncTransforms();
+
+                var events = new List<string>();
+                var selectable = front.GetComponent<InteractableComponent>();
+                selectable.AddPointerClickedListener(data => events.Add("front:" + data.PointerButton));
+                selectable.AddDeselectListener(data => events.Add("deselect"));
+                dragSurface.AddPointerClickedListener(data => events.Add("surface"));
+                interaction.AddPointerClickedListener(data => events.Add("behind"));
+                Vector2 screen = camera.WorldToScreenPoint(Vector3.zero);
+                raycaster.OnPointerClickedRaycast(new WorldInteractionContext(screen, 7, WorldInteractionPointerButton.Right));
+                raycaster.OnPointerClickedRaycast(Context(new Vector2(3, 0), 7));
+                Assert.That(events, Is.EqualTo(new[] { "front:Right", "surface", "deselect" }));
+            }
+            finally
+            {
+                Object.DestroyImmediate(front);
+                Object.DestroyImmediate(surface);
+            }
+        }
+
+        [Test]
+        public void MultipleCollidersOnOneTargetReceiveOneEventPerMouseButton()
+        {
+            target.AddComponent<CircleCollider2D>();
+            Physics2D.SyncTransforms();
+            var buttons = new List<InteractionPointerButton>();
+            interaction.AddPointerUpListener(data => buttons.Add(data.PointerButton));
+            var left = Context(Vector2.zero, 1);
+            var right = new WorldInteractionContext(left.ScreenPosition, left.PointerId, WorldInteractionPointerButton.Right);
+            raycaster.OnPointerDownRaycast(left);
+            raycaster.OnPointerDownRaycast(right);
+            raycaster.OnPointerUpRaycast(right);
+            raycaster.OnPointerUpRaycast(left);
+            Assert.That(buttons, Is.EqualTo(new[] { InteractionPointerButton.Right, InteractionPointerButton.Left }));
         }
 
         private WorldInteractionContext Context(Vector2 world, int pointerId) => new(camera.WorldToScreenPoint(world), pointerId);

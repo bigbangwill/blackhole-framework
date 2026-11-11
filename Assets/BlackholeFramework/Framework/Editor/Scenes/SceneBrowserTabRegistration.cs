@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -28,40 +25,34 @@ namespace Blackhole.Framework.Composition.Editor
 
         private static void Register()
         {
-            // Unity has no public registry for adding a pane to every window's Add Tab menu.
-            // Extend only the default mode's in-memory list.
+            // Unity has no public hook for every window's Add Tab menu.
+            // Append one item without replacing the mode's built-in pane list.
             const BindingFlags staticFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            const BindingFlags instanceFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             try
             {
-                Assembly editorAssembly = typeof(EditorWindow).Assembly;
-                Type modeService = editorAssembly.GetType("UnityEditor.ModeService");
-                Array modes = modeService?.GetProperty("modes", staticFlags)?.GetValue(null) as Array;
-                MethodInfo getBuiltInPanes = editorAssembly.GetType("UnityEditor.HostView")?.GetMethod("GetBuiltInPaneTypes", staticFlags);
-                if (modes == null || getBuiltInPanes == null)
+                Type hostView = typeof(EditorWindow).Assembly.GetType("UnityEditor.HostView");
+                EventInfo menuEvent = hostView?.GetEvent("populateDefaultMenuItems", staticFlags);
+                MethodInfo addHandler = menuEvent?.GetAddMethod(true);
+                MethodInfo removeHandler = menuEvent?.GetRemoveMethod(true);
+                if (addHandler == null || removeHandler == null)
                 {
                     Debug.LogWarning("Scenes could not register in Add Tab. Use Window > General > Scene Browser.");
                     return;
                 }
 
-                foreach (object mode in modes)
-                {
-                    Type modeType = mode.GetType();
-                    if (modeType.GetField("id", instanceFlags)?.GetValue(mode) as string != "default") continue;
-                    if (modeType.GetField("data", instanceFlags)?.GetValue(mode) is not IDictionary data) continue;
-
-                    List<object> panes = data["pane_types"] is IList<object> existing
-                        ? new List<object>(existing)
-                        : ((IEnumerable<Type>)getBuiltInPanes.Invoke(null, null)).Select(type => (object)type.FullName).ToList();
-                    string sceneBrowserType = typeof(SceneBrowserWindow).FullName;
-                    if (!panes.Contains(sceneBrowserType)) panes.Add(sceneBrowserType);
-                    data["pane_types"] = panes;
-                }
+                Action<GenericMenu, EditorWindow> handler = AddSceneBrowser;
+                removeHandler.Invoke(null, new object[] { handler });
+                addHandler.Invoke(null, new object[] { handler });
             }
             catch (Exception exception)
             {
                 Debug.LogWarning($"Scenes could not register in Add Tab. Use Window > General > Scene Browser. {exception.Message}");
             }
+        }
+
+        private static void AddSceneBrowser(GenericMenu menu, EditorWindow window)
+        {
+            menu.AddItem(new GUIContent("Add Tab/Scenes"), false, () => EditorWindow.CreateWindow<SceneBrowserWindow>("Scenes", window.GetType()));
         }
     }
 }

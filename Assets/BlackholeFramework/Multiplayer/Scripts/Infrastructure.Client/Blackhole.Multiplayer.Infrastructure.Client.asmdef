@@ -1,0 +1,25 @@
+{
+    "name": "Blackhole.Multiplayer.Infrastructure.Client",
+    "rootNamespace": "Blackhole.Multiplayer.Infrastructure.Client",
+    "references": [
+        "GUID:db7ad4a097934d22be72e6f5d4dd6106",
+        "GUID:38d339b0735d4be8a1eaf44a84867cc6",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:dde55c0e8aca4d040a474f2082fb5534",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "Blackhole.Multiplayer.Infrastructure",
+        "Blackhole.Multiplayer.Application.Client"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR || !UNITY_SERVER"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

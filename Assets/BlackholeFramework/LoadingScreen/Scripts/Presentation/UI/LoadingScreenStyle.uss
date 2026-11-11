@@ -10,3 +10,28 @@
     opacity: 0;
     background-color: rgb(0, 0, 0);
 }
+
+.loading-transition-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(0, 0, 0);
+}
+
+.loading-transition-panel--visible {
+    display: flex;
+}
+
+.loading-transition-spinner {
+    width: 48px;
+    height: 48px;
+    border-width: 4px;
+    border-radius: 24px;
+    border-color: rgb(74, 74, 74);
+    border-top-color: rgb(255, 255, 255);
+}

@@ -17,11 +17,13 @@ namespace Blackhole.WorldInteraction.Presentation
         private void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }
 
         private void Start()
@@ -33,6 +35,8 @@ namespace Blackhole.WorldInteraction.Presentation
         {
             BindCamera();
         }
+
+        private void OnActiveSceneChanged(Scene previous, Scene current) => BindCamera();
 
         private void BindCamera()
         {
@@ -75,6 +79,7 @@ namespace Blackhole.WorldInteraction.Presentation
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            eventData.eligibleForClick = false;
             _detectionRaycaster.OnBeginDragRaycast(CreateContext(eventData));
         }
 

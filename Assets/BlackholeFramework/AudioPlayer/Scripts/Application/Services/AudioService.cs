@@ -54,5 +54,9 @@ namespace Blackhole.AudioPlayer.Application.Services
         }
 
         public void StopAll() => _audioPort.StopAll();
+
+        public void PauseAll() => _audioPort.PauseAll();
+
+        public void ResumeAll() => _audioPort.ResumeAll();
     }
 }

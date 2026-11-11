@@ -1,181 +1,235 @@
+using System;
 using System.Collections.Generic;
 using Blackhole.WorldInteraction.Application;
 using Blackhole.WorldInteraction.Shared;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using VContainer;
 
 namespace Blackhole.WorldInteraction.Infrastructure
 {
-    /// <summary>
-    /// Uses 2D overlap queries to translate pointer input into callbacks on
-    /// <see cref="IInteractionTarget"/> components.
-    /// </summary>
+    /// <summary>Routes 2D pointer hits to world targets and captures the original recipients for dragging.</summary>
     public sealed class DetectionRaycaster : IDetectionRaycaster
     {
-        // Mouse buttons can share one pointer ID in InputSystemUIInputModule, so the
-        // button is part of the key. Touch input continues to use the Left value.
-        private readonly Dictionary<(int PointerId, WorldInteractionPointerButton Button), Dictionary<Collider2D, IInteractionTarget>> _pressedCollidersByInput = new();
-        private readonly Dictionary<(int PointerId, WorldInteractionPointerButton Button), Dictionary<Collider2D, IInteractionTarget>> _draggedCollidersByInput = new();
-
-        // Reused by every query to avoid allocating a Collider2D array per pointer event.
-        private readonly List<Collider2D> _raycastHits = new();
-
+        // The Input System can reuse a pointer ID for multiple mouse buttons.
+        private readonly Dictionary<(int, WorldInteractionPointerButton), List<IInteractionTarget>> _pressed = new();
+        private readonly Dictionary<(int, WorldInteractionPointerButton), List<IInteractionTarget>> _dragged = new();
+        private readonly List<Collider2D> _colliders = new();
+        private readonly List<Hit> _hits = new();
+        private readonly HashSet<IInteractionTarget> _recipients = new();
         private ContactFilter2D _contactFilter;
-        private Camera _camera;
+        private IInteractionTarget _selected;
+        private Camera _activeSceneCamera;
+        private Camera[] _cameras = Array.Empty<Camera>();
 
         public Camera MainCamera
         {
             get
             {
-                if (_camera == null)
-                    _camera = Camera.main;
+                Camera main = Camera.main;
+                Scene scene = SceneManager.GetActiveScene();
+                if (main == null || main.gameObject.scene == scene)
+                    return main;
+                if (IsMainCameraInScene(_activeSceneCamera, scene))
+                    return _activeSceneCamera;
 
-                return _camera;
+                // A persistent startup scene can still have an enabled MainCamera.
+                int count = Camera.allCamerasCount;
+                if (_cameras.Length < count)
+                    _cameras = new Camera[count];
+                count = Camera.GetAllCameras(_cameras);
+                for (int i = 0; i < count; i++)
+                {
+                    Camera candidate = _cameras[i];
+                    if (IsMainCameraInScene(candidate, scene))
+                        return _activeSceneCamera = candidate;
+                }
+                return main;
             }
         }
 
-        /// <summary>
-        /// Creates a raycaster restricted to the configured interaction layers.
-        /// </summary>
-        /// <param name="interactableLayerMask">Layers containing interaction targets.</param>
+        private static bool IsMainCameraInScene(Camera camera, Scene scene) =>
+            camera != null && camera.isActiveAndEnabled && camera.gameObject.scene == scene && camera.CompareTag("MainCamera");
+
         public DetectionRaycaster([Key(WorldInteractionLayerMasksEnum.InteractionLayer)] LayerMask interactableLayerMask)
         {
-            _contactFilter = new ContactFilter2D();
             _contactFilter.SetLayerMask(interactableLayerMask);
+        }
+
+        public void OnPointerDownRaycast(WorldInteractionContext context)
+        {
+            var key = GetInputKey(context);
+            _dragged.Remove(key);
+            List<IInteractionTarget> targets = Raycast(context.ScreenPosition, out _);
+            _pressed[key] = targets;
+            foreach (IInteractionTarget target in targets)
+            {
+                if (IsAlive(target))
+                    target.OnPointerDown(context);
+            }
         }
 
         public void OnBeginDragRaycast(WorldInteractionContext context)
         {
-            var input = GetInputKey(context);
-            if (!_pressedCollidersByInput.TryGetValue(input, out var pressedColliders))
+            var key = GetInputKey(context);
+            if (!_pressed.TryGetValue(key, out var targets))
                 return;
 
-            // Capture the original targets even when the pointer has left their colliders.
-            _draggedCollidersByInput[input] = new Dictionary<Collider2D, IInteractionTarget>(pressedColliders);
-            foreach (var hit in pressedColliders)
+            _dragged[key] = targets;
+            foreach (IInteractionTarget target in targets)
             {
-                if (hit.Key != null)
-                    hit.Value.OnBeginDrag(context);
+                if (IsAlive(target))
+                    target.OnBeginDrag(context);
             }
         }
 
         public void OnDragRaycast(WorldInteractionContext context)
         {
-            var input = GetInputKey(context);
-            if (!_draggedCollidersByInput.TryGetValue(input, out var pressedColliders))
+            if (!_dragged.TryGetValue(GetInputKey(context), out var targets))
                 return;
 
-            foreach (var colDic in pressedColliders)
+            foreach (IInteractionTarget target in targets)
             {
-                if (colDic.Key != null)
-                    colDic.Value.OnDrag(context);
+                if (IsAlive(target))
+                    target.OnDrag(context);
+            }
+        }
+
+        public void OnPointerUpRaycast(WorldInteractionContext context)
+        {
+            if (!_pressed.Remove(GetInputKey(context), out var targets))
+                return;
+
+            List<IInteractionTarget> hits = Raycast(context.ScreenPosition, out _);
+            foreach (IInteractionTarget target in targets)
+            {
+                if (IsAlive(target))
+                    target.OnPointerUp(context, hits.Contains(target));
             }
         }
 
         public void OnEndDragRaycast(WorldInteractionContext context)
         {
-            var input = GetInputKey(context);
-            if (!_draggedCollidersByInput.TryGetValue(input, out var pressedColliders))
+            if (!_dragged.Remove(GetInputKey(context), out var targets))
                 return;
 
-            _draggedCollidersByInput.Remove(input);
-            Raycast(context.ScreenPosition);
-
-            foreach (var colDic in pressedColliders)
+            List<IInteractionTarget> hits = Raycast(context.ScreenPosition, out _);
+            foreach (IInteractionTarget target in targets)
             {
-                if (colDic.Key != null)
-                {
-                    bool isHit = _raycastHits.Contains(colDic.Key);
-                    colDic.Value.OnEndDrag(context, isHit);
-                }
+                if (IsAlive(target))
+                    target.OnEndDrag(context, hits.Contains(target));
             }
         }
 
-        /// <inheritdoc />
-        public void OnPointerDownRaycast(WorldInteractionContext context)
-        {
-            _draggedCollidersByInput.Remove(GetInputKey(context));
-            var pressedColliders = GetOrCreatePressedColliders(context);
-            pressedColliders.Clear();
-
-            Raycast(context.ScreenPosition);
-            foreach (var hit in _raycastHits)
-            {
-                if (!pressedColliders.ContainsKey(hit) && hit.TryGetComponent<IInteractionTarget>(out var target))
-                {
-                    pressedColliders.Add(hit, target);
-                    target.OnPointerDown(context);
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        public void OnPointerUpRaycast(WorldInteractionContext context)
-        {
-            var input = GetInputKey(context);
-            if (!_pressedCollidersByInput.TryGetValue(input, out var pressedColliders))
-                return;
-
-            _pressedCollidersByInput.Remove(input);
-            Raycast(context.ScreenPosition);
-
-            // Every collider that received pointer-down must also receive pointer-up.
-            // Report whether the released pointer still hits each original target.
-            foreach (var colDic in pressedColliders)
-            {
-                if (colDic.Key != null)
-                {
-                    bool isHit = _raycastHits.Contains(colDic.Key);
-                    colDic.Value.OnPointerUp(context, isHit);
-                }
-            }
-        }
-
-        /// <inheritdoc />
         public void OnPointerClickedRaycast(WorldInteractionContext context)
         {
-            Raycast(context.ScreenPosition);
-            foreach (var hit in _raycastHits)
+            List<IInteractionTarget> targets = Raycast(context.ScreenPosition, out var selected);
+            IInteractionTarget previous = _selected;
+            _selected = selected;
+            if (!ReferenceEquals(previous, selected) && IsAlive(previous))
+                previous.Deselect(context);
+
+            foreach (IInteractionTarget target in targets)
             {
-                if (hit.TryGetComponent<IInteractionTarget>(out var target))
-                {
+                if (IsAlive(target))
                     target.OnPointerClicked(context);
-                }
             }
         }
 
-        private Dictionary<Collider2D, IInteractionTarget> GetOrCreatePressedColliders(WorldInteractionContext context)
+        private List<IInteractionTarget> Raycast(Vector2 screenPosition, out IInteractionTarget selected)
         {
-            var input = GetInputKey(context);
-            if (_pressedCollidersByInput.TryGetValue(input, out var pressedColliders))
-                return pressedColliders;
-
-            pressedColliders = new Dictionary<Collider2D, IInteractionTarget>();
-            _pressedCollidersByInput.Add(input, pressedColliders);
-            return pressedColliders;
-        }
-
-        private static (int PointerId, WorldInteractionPointerButton Button) GetInputKey(WorldInteractionContext context)
-        {
-            return (context.PointerId, context.PointerButton);
-        }
-
-        private void Raycast(Vector2 screenPosition)
-        {
+            selected = null;
+            var targets = new List<IInteractionTarget>();
             Camera camera = MainCamera;
-            _raycastHits.Clear();
             if (camera == null)
-                return;
+                return targets;
 
-            // Match the global trigger-query behavior used by the allocating overlap APIs.
+            // Intersect the XY gameplay plane for both perspective and orthographic cameras.
+            Ray ray = camera.ScreenPointToRay(screenPosition);
+            if (!new Plane(Vector3.forward, Vector3.zero).Raycast(ray, out float distance))
+                return targets;
+
+            _colliders.Clear();
+            _hits.Clear();
+            _recipients.Clear();
             _contactFilter.useTriggers = Physics2D.queriesHitTriggers;
+            Physics2D.OverlapPoint(ray.GetPoint(distance), _contactFilter, _colliders);
 
-            // Canvas events provide screen pixels. Intersect the camera ray with
-            // the XY gameplay plane so both orthographic and perspective cameras work.
-            var ray = camera.ScreenPointToRay(screenPosition);
-            var worldPlane = new Plane(Vector3.forward, Vector3.zero);
-            if (worldPlane.Raycast(ray, out float distance))
-                Physics2D.OverlapPoint(ray.GetPoint(distance), _contactFilter, _raycastHits);
+            foreach (Collider2D collider in _colliders)
+            {
+                if (collider != null && collider.TryGetComponent<IInteractionTarget>(out var target) && IsAlive(target))
+                    _hits.Add(new Hit(collider, target, camera));
+            }
+
+            _hits.Sort();
+            foreach (Hit hit in _hits)
+            {
+                IInteractionTarget target = hit.Target;
+                if ((selected != null && !target.ReceiveAlongsideTarget) || !_recipients.Add(target))
+                    continue;
+
+                targets.Add(target);
+                if (!target.PassThrough && !target.ReceiveAlongsideTarget)
+                    selected = target;
+            }
+
+            return targets;
+        }
+
+        private static bool IsAlive(IInteractionTarget target) =>
+            target != null && (target is not UnityEngine.Object component || component != null);
+
+        private static (int, WorldInteractionPointerButton) GetInputKey(WorldInteractionContext context) =>
+            (context.PointerId, context.PointerButton);
+
+        private readonly struct Hit : IComparable<Hit>
+        {
+            public IInteractionTarget Target { get; }
+            private readonly int _layer;
+            private readonly int _order;
+            private readonly float _depth;
+            private readonly ulong _entityId;
+
+            public Hit(Collider2D collider, IInteractionTarget target, Camera camera)
+            {
+                Target = target;
+                _entityId = EntityId.ToULong(collider.GetEntityId());
+                var group = collider.GetComponentInParent<SortingGroup>();
+                int layerId = 0;
+                int order = 0;
+                Vector3 position = collider.bounds.center;
+
+                if (group != null)
+                {
+                    layerId = group.sortingLayerID;
+                    order = group.sortingOrder;
+                    position = group.transform.position;
+                }
+                else if (collider.TryGetComponent<Renderer>(out var renderer))
+                {
+                    layerId = renderer.sortingLayerID;
+                    order = renderer.sortingOrder;
+                    position = renderer.bounds.center;
+                }
+
+                _layer = SortingLayer.GetLayerValueFromID(layerId);
+                _order = order;
+                Vector3 offset = position - camera.transform.position;
+                _depth = camera.orthographic ? Vector3.Dot(offset, camera.transform.forward) : offset.sqrMagnitude;
+            }
+
+            public int CompareTo(Hit other)
+            {
+                int layer = other._layer.CompareTo(_layer);
+                if (layer != 0)
+                    return layer;
+                int order = other._order.CompareTo(_order);
+                if (order != 0)
+                    return order;
+                int depth = _depth.CompareTo(other._depth);
+                return depth != 0 ? depth : _entityId.CompareTo(other._entityId);
+            }
         }
     }
 }

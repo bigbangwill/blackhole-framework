@@ -1,0 +1,27 @@
+{
+    "name": "Blackhole.JoinTest.Testing",
+    "rootNamespace": "Blackhole.JoinTest.Testing",
+    "references": [
+        "GUID:86632267d9fa4abe9c7e80f321272cf6",
+        "GUID:96391bfc9a79431880148d8df900319c",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:51a50a3e966c4d9f992220fdf3a30bd6",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:379fbd9cdc0b4d988634a600acdf8d2c",
+        "GUID:2a5fd579dceb4942a7b8889dc79be832",
+        "GUID:7c2550f8ec094a0fb536a8367a4a1614",
+        "GUID:2bac10670e9f4651ad536973138efecd",
+        "GUID:914b911182b3462ca8917371ce7d7a35",
+        "GUID:86d97add583746b48986731bb3e0f390"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

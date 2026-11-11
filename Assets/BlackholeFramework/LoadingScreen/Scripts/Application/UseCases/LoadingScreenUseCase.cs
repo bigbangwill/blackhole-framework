@@ -7,6 +7,9 @@ namespace Blackhole.LoadingScreen.Application
     public class LoadingScreenUseCase : ILoadingScreenService
     {
         private readonly LoadingScreenPresenterRegistry _presenter;
+        private int _transitionOperations;
+        private int _manualRequest;
+        private bool _manualTransition;
 
         public LoadingScreenUseCase(LoadingScreenPresenterRegistry presenter)
         {
@@ -50,5 +53,51 @@ namespace Blackhole.LoadingScreen.Application
                 await _presenter.FadeOut(type);
             }
         }
+
+        public async UniTask OpenTransitionAsync()
+        {
+            int request = ++_manualRequest;
+            _manualTransition = true;
+            try
+            {
+                await _presenter.OpenTransitionAsync();
+            }
+            catch
+            {
+                if (request == _manualRequest)
+                    _manualTransition = false;
+                throw;
+            }
+        }
+
+        public UniTask CloseTransitionAsync()
+        {
+            _manualRequest++;
+            _manualTransition = false;
+            return CloseIfIdle();
+        }
+
+        public async UniTask ExecuteTransitionAsync(Func<UniTask> operation)
+        {
+            if (operation == null)
+                throw new ArgumentNullException(nameof(operation));
+
+            _transitionOperations++;
+            try
+            {
+                await _presenter.OpenTransitionAsync();
+                await operation();
+            }
+            finally
+            {
+                await UniTask.SwitchToMainThread();
+                _transitionOperations--;
+                await CloseIfIdle();
+            }
+        }
+
+        private UniTask CloseIfIdle() => _transitionOperations == 0 && !_manualTransition
+            ? _presenter.CloseTransitionAsync()
+            : UniTask.CompletedTask;
     }
 }

@@ -8,6 +8,12 @@ namespace Blackhole.WorldInteraction.Shared
     /// </summary>
     public interface IInteractionTarget
     {
+        /// <summary>Receives events without blocking other targets or becoming selected.</summary>
+        bool PassThrough => true;
+
+        /// <summary>Receives events even when a higher-priority target blocks them.</summary>
+        bool ReceiveAlongsideTarget => false;
+
         /// <summary>Handles the start of a pointer press over this target.</summary>
         /// <param name="context">The pointer event context.</param>
         public void OnPointerDown(WorldInteractionContext context);
@@ -23,5 +29,7 @@ namespace Blackhole.WorldInteraction.Shared
         public void OnBeginDrag(WorldInteractionContext context);
         public void OnDrag(WorldInteractionContext context);
         public void OnEndDrag(WorldInteractionContext context, bool isHit);
+
+        void Deselect(WorldInteractionContext context) { }
     }
 }

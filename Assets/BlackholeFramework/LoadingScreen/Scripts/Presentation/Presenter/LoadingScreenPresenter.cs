@@ -13,10 +13,17 @@ namespace Blackhole.LoadingScreen.Presentation
         private PanelRenderer _panelRenderer;
 
         private const float FadeDurationSeconds = 0.5f;
+        private const float SpinnerDegreesPerSecond = 300f;
+        private const string VisibleTransitionClass = "loading-transition-panel--visible";
         private VisualElement _blackPanel;
         private VisualElement _transparentPanel;
+        private VisualElement _transitionPanel;
+        private VisualElement _transitionSpinner;
         private const float TransparentPanelMaxOpacity = 0f;
         private int _transitionVersion;
+        private int _overlayVersion;
+        private bool _overlayVisible;
+        private float _spinnerAngle;
 
         private void Awake()
         {
@@ -31,11 +38,14 @@ namespace Blackhole.LoadingScreen.Presentation
         private void OnDisable()
         {
             _transitionVersion++;
+            CloseTransitionAsync();
             _panelRenderer.UnregisterUIReloadCallback(OnLoadCallback);
             Hide(_blackPanel);
             Hide(_transparentPanel);
             _blackPanel = null;
             _transparentPanel = null;
+            _transitionPanel = null;
+            _transitionSpinner = null;
         }
 
         private void OnLoadCallback(PanelRenderer panelRenderer, VisualElement rootElement)
@@ -45,8 +55,73 @@ namespace Blackhole.LoadingScreen.Presentation
 
             _blackPanel = rootElement.Q<VisualElement>("BlackPanel");
             _transparentPanel = rootElement.Q<VisualElement>("TransparentPanel");
+            _transitionPanel = rootElement.Q<VisualElement>("TransitionPanel");
+            _transitionSpinner = _transitionPanel?.Q<VisualElement>("TransitionSpinner");
             Hide(_blackPanel);
             Hide(_transparentPanel);
+            SetOverlayVisible(_overlayVisible);
+        }
+
+        private void Update()
+        {
+            if (!_overlayVisible || _transitionSpinner == null)
+                return;
+
+            _spinnerAngle = (_spinnerAngle + SpinnerDegreesPerSecond * Time.unscaledDeltaTime) % 360f;
+            _transitionSpinner.style.rotate = new Rotate(new Angle(_spinnerAngle, AngleUnit.Degree));
+        }
+
+        public async UniTask OpenTransitionAsync()
+        {
+            int version = _overlayVersion;
+            for (int frame = 0; frame < 300 && _transitionPanel == null && _blackPanel == null; frame++)
+            {
+                CheckOverlayVersion(version);
+                await UniTask.Yield();
+            }
+
+            CheckOverlayVersion(version);
+            if (_transitionPanel == null && _blackPanel == null)
+                throw new InvalidOperationException("The loading transition panel did not become ready.");
+
+            SetOverlayVisible(true);
+            if (UnityEngine.Application.isPlaying)
+                await UniTask.NextFrame();
+            CheckOverlayVersion(version);
+        }
+
+        public UniTask CloseTransitionAsync()
+        {
+            _overlayVersion++;
+            if (_overlayVisible)
+                SetOverlayVisible(false);
+            return UniTask.CompletedTask;
+        }
+
+        private void CheckOverlayVersion(int version)
+        {
+            if (version != _overlayVersion)
+                throw new OperationCanceledException("The loading transition was closed before it became ready.");
+        }
+
+        private void SetOverlayVisible(bool visible)
+        {
+            _overlayVisible = visible;
+            if (_transitionPanel != null)
+            {
+                _transitionPanel.EnableInClassList(VisibleTransitionClass, visible);
+                if (visible)
+                    _transitionPanel.BringToFront();
+            }
+            else if (_blackPanel != null && visible)
+            {
+                _blackPanel.style.display = DisplayStyle.Flex;
+                _blackPanel.style.opacity = 1f;
+            }
+            else
+            {
+                Hide(_blackPanel);
+            }
         }
 
         public async UniTask FadeIn(LoadingScreenType type)

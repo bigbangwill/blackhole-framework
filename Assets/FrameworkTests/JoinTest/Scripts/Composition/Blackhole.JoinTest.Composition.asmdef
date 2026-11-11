@@ -1,0 +1,28 @@
+{
+  "name": "Blackhole.JoinTest.Composition",
+  "rootNamespace": "Blackhole.JoinTest.Composition",
+  "references": [
+    "GUID:379fbd9cdc0b4d988634a600acdf8d2c",
+    "GUID:2a5fd579dceb4942a7b8889dc79be832",
+    "GUID:7c2550f8ec094a0fb536a8367a4a1614",
+    "GUID:2bac10670e9f4651ad536973138efecd",
+    "GUID:914b911182b3462ca8917371ce7d7a35",
+    "GUID:e779237c386616a41a524081731ed8c0",
+    "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+    "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+    "GUID:f51ebe6a0ceec4240a699833d6309b23",
+    "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+    "GUID:86632267d9fa4abe9c7e80f321272cf6",
+    "GUID:ff56fa7d02df47cf861554c9ba78c491",
+    "Unity.ugui"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

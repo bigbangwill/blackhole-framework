@@ -13,6 +13,14 @@ namespace Blackhole.WorldInteraction.Presentation
     [RequireComponent(typeof(Collider2D))]
     public class InteractableComponent : MonoBehaviour, IInteractionTarget, IInteractionEventSource
     {
+        [Tooltip("Receive events without blocking targets behind this one or becoming selected.")]
+        [SerializeField] private bool _passThrough;
+        [Tooltip("Receive events even behind a blocking target, without becoming selected.")]
+        [SerializeField] private bool _receiveAlongsideTarget;
+
+        public bool PassThrough => _passThrough;
+        public bool ReceiveAlongsideTarget => _receiveAlongsideTarget;
+
         private Action<WorldInteractionEventData> _onPointerDown;
         private Action<WorldInteractionEventData> _onPointerUp;
         private Action<WorldInteractionEventData> _onPointerClicked;
@@ -20,6 +28,7 @@ namespace Blackhole.WorldInteraction.Presentation
         private Action<WorldInteractionEventData> _onBeginDrag;
         private Action<WorldInteractionEventData> _onDrag;
         private Action<WorldInteractionEventData> _onEndDrag;
+        private Action<WorldInteractionEventData> _onDeselect;
 
         /// <inheritdoc />
         public void AddPointerDownListener(Action<WorldInteractionEventData> listener)
@@ -93,40 +102,51 @@ namespace Blackhole.WorldInteraction.Presentation
             _onEndDrag -= listener;
         }
 
+        public void AddDeselectListener(Action<WorldInteractionEventData> listener) => _onDeselect += listener;
+
+        public void RemoveDeselectListener(Action<WorldInteractionEventData> listener) => _onDeselect -= listener;
+
         /// <inheritdoc />
         public void OnPointerClicked(WorldInteractionContext context)
         {
-            _onPointerClicked?.Invoke(new WorldInteractionEventData(context.ScreenPosition, context.PointerId));
+            _onPointerClicked?.Invoke(CreateEventData(context));
         }
 
         /// <inheritdoc />
         public void OnPointerDown(WorldInteractionContext context)
         {
-            _onPointerDown?.Invoke(new WorldInteractionEventData(context.ScreenPosition, context.PointerId));
+            _onPointerDown?.Invoke(CreateEventData(context));
         }
 
         /// <inheritdoc />
         public void OnPointerUp(WorldInteractionContext context, bool isHit)
         {
-            _onPointerUp?.Invoke(new WorldInteractionEventData(context.ScreenPosition, context.PointerId, isHit));
+            _onPointerUp?.Invoke(CreateEventData(context, isHit));
         }
 
         /// <inheritdoc />
         public void OnBeginDrag(WorldInteractionContext context)
         {
-            _onBeginDrag?.Invoke(new WorldInteractionEventData(context.ScreenPosition, context.PointerId));
+            _onBeginDrag?.Invoke(CreateEventData(context));
         }
 
         /// <inheritdoc />
         public void OnDrag(WorldInteractionContext context)
         {
-            _onDrag?.Invoke(new WorldInteractionEventData(context.ScreenPosition, context.PointerId));
+            _onDrag?.Invoke(CreateEventData(context));
         }
 
         /// <inheritdoc />
         public void OnEndDrag(WorldInteractionContext context, bool isHit)
         {
-            _onEndDrag?.Invoke(new WorldInteractionEventData(context.ScreenPosition, context.PointerId, isHit));
+            _onEndDrag?.Invoke(CreateEventData(context, isHit));
+        }
+
+        public void Deselect(WorldInteractionContext context) => _onDeselect?.Invoke(CreateEventData(context));
+
+        private static WorldInteractionEventData CreateEventData(WorldInteractionContext context, bool isHit = false)
+        {
+            return new WorldInteractionEventData(context.ScreenPosition, context.PointerId, isHit, (InteractionPointerButton)context.PointerButton);
         }
     }
 }

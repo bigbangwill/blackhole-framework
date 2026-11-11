@@ -19,7 +19,6 @@ namespace Blackhole.Networking.Composition.Client
         {
             if (builder.Exists(typeof(NetworkSessionOptions)))
                 throw new InvalidOperationException("Install only one networking role per module session.");
-
             builder.RegisterInstance(new NetworkSessionOptions(Role, host, port));
             builder.Register<UtpClientRuntime>(Lifetime.Singleton).AsImplementedInterfaces();
         }

@@ -1,5 +1,8 @@
 using Blackhole.SharedKernel.Composition;
 using UnityEngine;
+#if UNITY_EDITOR
+using Unity.Multiplayer;
+#endif
 
 namespace Blackhole.ModuleSystem.Composition
 {
@@ -13,7 +16,9 @@ namespace Blackhole.ModuleSystem.Composition
         [SerializeField] private ModuleInstallerSO _serverInstaller;
 #endif
 
-#if UNITY_SERVER
+#if UNITY_EDITOR
+        public override ModuleInstallerSO Installer => MultiplayerRolesManager.ActiveMultiplayerRoleMask == MultiplayerRoleFlags.Server ? _serverInstaller : _clientInstaller;
+#elif UNITY_SERVER
         public override ModuleInstallerSO Installer => _serverInstaller;
 #else
         public override ModuleInstallerSO Installer => _clientInstaller;

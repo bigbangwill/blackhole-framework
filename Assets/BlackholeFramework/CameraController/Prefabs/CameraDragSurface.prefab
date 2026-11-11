@@ -92,6 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c95b09c178e4814392b987f64104168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Blackhole.WorldInteraction.Presentation::Blackhole.WorldInteraction.Presentation.InteractableComponent
+  _passThrough: 1
+  _receiveAlongsideTarget: 1
 --- !u!114 &2620749628201512478
 MonoBehaviour:
   m_ObjectHideFlags: 0

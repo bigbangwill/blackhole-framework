@@ -1,5 +1,6 @@
 using Blackhole.CameraController.Contract;
 using Blackhole.WorldInteraction.Contract;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,7 +9,7 @@ using VContainer;
 
 namespace Blackhole.CameraController.Implementation
 {
-    public class CameraControllerComponent : MonoBehaviour, ICameraController
+    public class CameraControllerComponent : MonoBehaviour, ICameraController, IDisposable
     {
         private Camera _camera;
         private bool _canInteractCamera;
@@ -23,6 +24,8 @@ namespace Blackhole.CameraController.Implementation
         private IInteractionEventSource _input;
         private InputActionAsset _inputActionsInstance;
         private InputAction _scrollZoomAction;
+        private Transform _surfaceHome;
+        private bool _surfaceMoved;
 
         private const float PinchThreshold = 8f;
         private readonly Dictionary<int, Vector2> _pointers = new();
@@ -94,8 +97,25 @@ namespace Blackhole.CameraController.Implementation
 
         private void OnDestroy()
         {
+            if (_surfaceMoved && _surface != null && _surface != gameObject)
+            {
+                if (_surfaceHome != null && _surfaceHome.IsChildOf(transform))
+                    Destroy(_surface);
+                else
+                    RestoreSurfaceParent();
+            }
             if (_inputActionsInstance != null)
                 Destroy(_inputActionsInstance);
+        }
+
+        public void Dispose()
+        {
+            if (this == null)
+                return;
+
+            RestoreSurfaceParent();
+            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
 
         private void Update()
@@ -119,7 +139,7 @@ namespace Blackhole.CameraController.Implementation
 
         private void OnPointerDown(WorldInteractionEventData data)
         {
-            if (!_canInteractCamera || _camera == null || _pointers.Count >= 2 || _pointers.ContainsKey(data.PointerId))
+            if (data.PointerButton != InteractionPointerButton.Left || !_canInteractCamera || _camera == null || _pointers.Count >= 2 || _pointers.ContainsKey(data.PointerId))
                 return;
 
             _pointers.Add(data.PointerId, data.ScreenPosition);
@@ -136,7 +156,7 @@ namespace Blackhole.CameraController.Implementation
 
         private void OnPointerUp(WorldInteractionEventData data)
         {
-            if (!_pointers.Remove(data.PointerId))
+            if (data.PointerButton != InteractionPointerButton.Left || !_pointers.Remove(data.PointerId))
                 return;
 
             _isDragging = false;
@@ -157,7 +177,7 @@ namespace Blackhole.CameraController.Implementation
 
         private void OnBeginDrag(WorldInteractionEventData data)
         {
-            if (!_canInteractCamera || _camera == null || !_pointers.ContainsKey(data.PointerId))
+            if (data.PointerButton != InteractionPointerButton.Left || !_canInteractCamera || _camera == null || !_pointers.ContainsKey(data.PointerId))
                 return;
 
             _pointers[data.PointerId] = data.ScreenPosition;
@@ -172,7 +192,7 @@ namespace Blackhole.CameraController.Implementation
 
         private void OnDrag(WorldInteractionEventData data)
         {
-            if (!_canInteractCamera || _camera == null || !_pointers.ContainsKey(data.PointerId))
+            if (data.PointerButton != InteractionPointerButton.Left || !_canInteractCamera || _camera == null || !_pointers.ContainsKey(data.PointerId))
                 return;
 
             _pointers[data.PointerId] = data.ScreenPosition;
@@ -326,7 +346,7 @@ namespace Blackhole.CameraController.Implementation
         private void FitSurfaceToCamera()
         {
             if (_camera == null || !_camera.orthographic || _surface == null
-                || !_surface.TryGetComponent<BoxCollider2D>(out var collider))
+                || _camera.transform.IsChildOf(_surface.transform) || !_surface.TryGetComponent<BoxCollider2D>(out var collider))
                 return;
 
             Vector3 scale = _surface.transform.lossyScale;
@@ -352,18 +372,47 @@ namespace Blackhole.CameraController.Implementation
             _outsideMaxZoomSize = 0f;
             _camera = cam;
             ResetGesture();
-            if (_camera != null)
+            if (_camera == null)
             {
-                _camera.transform.position = ClampToBoundary(_camera.transform.position);
-                _targetPosition = _camera.transform.position;
-                FitSurfaceToCamera();
+                RestoreSurfaceParent();
+                return;
+            }
+
+            AttachSurfaceToCamera();
+            _camera.transform.position = ClampToBoundary(_camera.transform.position);
+            _targetPosition = _camera.transform.position;
+            FitSurfaceToCamera();
+        }
+
+        private void AttachSurfaceToCamera()
+        {
+            if (_surface == null || _camera.transform.IsChildOf(_surface.transform))
+            {
+                RestoreSurfaceParent();
+                return;
+            }
+
+            Transform surface = _surface.transform;
+            if (surface.parent == _camera.transform)
+                return;
+
+            if (!_surfaceMoved)
+                _surfaceHome = surface.parent;
+            surface.SetParent(_camera.transform, true);
+            _surfaceMoved = true;
+        }
+
+        private void RestoreSurfaceParent()
+        {
+            if (_surfaceMoved && _surface != null)
+            {
+                _surface.transform.SetParent(_surfaceHome != null ? _surfaceHome : null, true);
+                _surfaceMoved = false;
             }
         }
-        public void DeActivateCamera()
-        {
-            ResetGesture();
-            _camera = null;
-        }
+
+        public void DeActivateCamera() => ActivateCamera(null);
+
         public void SetCanInteract(bool canInteract)
         {
             _canInteractCamera = canInteract;

@@ -1,0 +1,27 @@
+{
+    "name": "Blackhole.Multiplayer.Composition.Server",
+    "rootNamespace": "Blackhole.Multiplayer.Composition.Server",
+    "references": [
+        "GUID:db7ad4a097934d22be72e6f5d4dd6106",
+        "GUID:38d339b0735d4be8a1eaf44a84867cc6",
+        "GUID:91da04a9b56a4bc9a128a52776c2d615",
+        "GUID:e779237c386616a41a524081731ed8c0",
+        "GUID:97c5f0f9c6e721c4b88d41fe5030edeb",
+        "GUID:673f3e042e9d7b34a9b59b9a5530e4b3",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "Blackhole.Multiplayer.Infrastructure.Server",
+        "Blackhole.Multiplayer.Application.Server"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR || UNITY_SERVER"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -6,17 +6,19 @@ Blackhole.Networking provides transport contracts and Unity Transport implementa
 
 Install exactly one role per owning container. Data/NetworkingInstaller.asset configures a client; Data/NetworkingServerInstaller.asset configures a server. Each installer registers immutable NetworkSessionOptions and the corresponding transport as a singleton shared by child scopes. Its driver is disposed with the owning scope.
 
-The platform module manifest depends on Blackhole.Messaging and selects the client installer for ordinary players or the server installer when UNITY_SERVER is defined. In the Editor, both installers are available for local client/server tests. The installers reject a second role in one container.
+The platform module manifest depends on Blackhole.Messaging and selects the client installer for ordinary players or the server installer when UNITY_SERVER is defined. In the Editor, it selects the server installer when the instance's Multiplayer Role is Server; Client or Client and Server selects the client installer. Both installers remain available for local client/server tests. The installers reject a second role in one container.
+
+For testing without player builds, open Window > Play Mode > Scenarios, keep the Main Editor as Client and add an Additional Editor Instance with its Multiplayer Role set to Server. Leave Local Instances empty. The Dedicated Server package supplies the role settings; Multiplayer Play Mode runs the additional instance as a virtual Editor player.
 
 ## Assembly separation
 
 Scripts/Composition.Client and Scripts/Composition.Server contain NetworkingClientInstaller and NetworkingServerInstaller. Each installer inherits directly from ModuleInstallerSO, owns its endpoint configuration and references only its matching infrastructure assembly.
 
-Scripts/Infrastructure.Client contains UtpClientRuntime; Scripts/Infrastructure.Server contains UtpServerRuntime. Their assembly names and namespaces are Blackhole.Networking.Infrastructure.Client and Blackhole.Networking.Infrastructure.Server. Contract and Application remain shared. There is no shared networking composition or transport implementation assembly.
+Scripts/Infrastructure.Client contains UtpClientRuntime; Scripts/Infrastructure.Server contains UtpServerRuntime. Their assembly names and namespaces are Blackhole.Networking.Infrastructure.Client and Blackhole.Networking.Infrastructure.Server. The Contract assembly remains shared. There is no shared networking composition or transport implementation assembly.
 
 Client composition and infrastructure assemblies require UNITY_EDITOR || !UNITY_SERVER. Server composition and infrastructure assemblies require UNITY_EDITOR || UNITY_SERVER. Both roles compile in the Editor, while player compilation includes only the matching role. Use the Dedicated Server build subtarget to define UNITY_SERVER; selecting a desktop operating system alone does not select the networking role. Networking tests run in the Editor because they exercise both roles in one process. PlatformModuleManifestSO uses matching compile guards on its serialized fields: both references remain editable in the Editor, but each player contains only its selected installer field and asset dependency.
 
-Register INetworkClientPayloadHandler for a client, or INetworkPayloadHandler for a server. Register these alongside the transport in its owning scope. Application-specific handlers are supplied by the receiving game.
+Implement the payload handler for your role from Blackhole.Networking.Contract: INetworkClientPayloadHandler for a client or INetworkPayloadHandler for a server. Register these alongside the transport in its owning scope. Application-specific handlers are supplied by the receiving game.
 
 Install the existing RuntimeLifecyleInstaller in the same scope as the transport. Its ContainerLocal collections initialize and tick local IApplicationInit/IApplicationTick implementations. An ancestor's lifecycle runner does not tick services registered in a child scope. Messaging must provide the connection/peer IEventPublisher contracts through that scope or its ancestors.
 

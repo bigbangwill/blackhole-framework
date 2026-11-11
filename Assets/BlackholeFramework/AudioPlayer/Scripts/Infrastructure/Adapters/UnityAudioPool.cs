@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using Blackhole.AudioPlayer.Application.Ports;
@@ -6,22 +8,34 @@ using VContainer;
 
 namespace Blackhole.AudioPlayer.Infrastructure.Adapters
 {
-    public class UnityAudioPool : MonoBehaviour, IAudioPlayerPort
+    [DisallowMultipleComponent]
+    public class UnityAudioPool : MonoBehaviour, IAudioPlayerPort, IDisposable
     {
-        [Inject] public AudioConfigSO Config { get; set; }
+        public AudioConfigSO Config { get; set; }
 
         private AudioSource[] _sfxSources;
         private int _sfxIndex;
         private AudioSource _musicSource;
+        private readonly HashSet<AudioSource> _pausedSources = new();
 
-        void Awake()
+        private void Awake()
         {
-            int sfxCount = Config.SfxChannelCount;
-            int musicCount = Config.MusicChannelCount;
+            if (Config != null)
+                Initialize(Config);
+        }
+
+        [Inject]
+        public void Initialize(AudioConfigSO config)
+        {
+            if (_sfxSources != null)
+                return;
+
+            Config = config != null ? config : throw new ArgumentNullException(nameof(config));
+            int sfxCount = Mathf.Max(1, config.SfxChannelCount);
 
             // SFX Child
             GameObject sfxChild = new GameObject("SFX");
-            sfxChild.transform.SetParent(transform);
+            sfxChild.transform.SetParent(transform, false);
             _sfxSources = new AudioSource[sfxCount];
             for (int i = 0; i < sfxCount; i++)
             {
@@ -31,41 +45,44 @@ namespace Blackhole.AudioPlayer.Infrastructure.Adapters
 
             // Music Child
             GameObject musicChild = new GameObject("Music");
-            musicChild.transform.SetParent(transform);
+            musicChild.transform.SetParent(transform, false);
             _musicSource = musicChild.AddComponent<AudioSource>();
             _musicSource.playOnAwake = false;
         }
 
         public void Play(AudioClip clip, float volume, float pitch, bool loop, bool isMusic, AudioMixerGroup mixerGroup)
         {
+            if (_sfxSources == null)
+                Initialize(Config != null ? Config : throw new InvalidOperationException("Configure the audio pool before starting playback."));
+
             if (isMusic)
             {
-                if (_musicSource.isPlaying) _musicSource.Stop();
+                bool wasPaused = _pausedSources.Remove(_musicSource);
+                bool sameClip = _musicSource.clip == clip;
+                bool alreadyPlaying = sameClip && _musicSource.isPlaying;
+                if (!sameClip)
+                {
+                    _musicSource.Stop();
+                    _musicSource.clip = clip;
+                }
+
                 _musicSource.outputAudioMixerGroup = mixerGroup;
-                _musicSource.clip = clip;
                 _musicSource.volume = volume;
                 _musicSource.pitch = pitch;
                 _musicSource.loop = loop;
-                _musicSource.Play();
+
+                if (wasPaused && sameClip)
+                    _musicSource.UnPause();
+                else if (!alreadyPlaying)
+                    _musicSource.Play();
             }
             else
             {
-                AudioSource target = null;
-                for (int i = 0; i < _sfxSources.Length; i++)
-                {
-                    if (!_sfxSources[i].isPlaying)
-                    {
-                        target = _sfxSources[i];
-                        break;
-                    }
-                }
-
+                AudioSource target = GetSfxSource();
                 if (target == null)
-                {
-                    target = _sfxSources[_sfxIndex];
-                    _sfxIndex = (_sfxIndex + 1) % _sfxSources.Length;
-                }
+                    return;
 
+                target.Stop();
                 target.outputAudioMixerGroup = mixerGroup;
                 target.clip = clip;
                 target.volume = volume;
@@ -77,8 +94,67 @@ namespace Blackhole.AudioPlayer.Infrastructure.Adapters
 
         public void StopAll()
         {
-            foreach (var s in _sfxSources) s.Stop();
+            if (_sfxSources == null)
+                return;
+
+            foreach (AudioSource source in _sfxSources)
+                source.Stop();
             _musicSource.Stop();
+            _pausedSources.Clear();
+        }
+
+        public void PauseAll()
+        {
+            if (_sfxSources == null)
+                return;
+
+            foreach (AudioSource source in _sfxSources)
+                Pause(source);
+            Pause(_musicSource);
+        }
+
+        public void ResumeAll()
+        {
+            foreach (AudioSource source in _pausedSources)
+                source.UnPause();
+            _pausedSources.Clear();
+        }
+
+        public void Dispose()
+        {
+            if (this == null)
+                return;
+
+            StopAll();
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+
+        private AudioSource GetSfxSource()
+        {
+            foreach (AudioSource source in _sfxSources)
+            {
+                if (!source.isPlaying && !_pausedSources.Contains(source))
+                    return source;
+            }
+
+            for (int i = 0; i < _sfxSources.Length; i++)
+            {
+                AudioSource source = _sfxSources[_sfxIndex];
+                _sfxIndex = (_sfxIndex + 1) % _sfxSources.Length;
+                if (!_pausedSources.Contains(source))
+                    return source;
+            }
+            return null;
+        }
+
+        private void Pause(AudioSource source)
+        {
+            if (!source.isPlaying)
+                return;
+
+            source.Pause();
+            _pausedSources.Add(source);
         }
     }
 }

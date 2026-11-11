@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -11,5 +12,9 @@ namespace Blackhole.AudioPlayer.Application.Ports
         void Play(AudioClip clip, float volume, float pitch, bool loop, bool isMusic, AudioMixerGroup mixerGroup);
 
         void StopAll();
+
+        void PauseAll() => throw new NotSupportedException("This audio player does not support pausing playback.");
+
+        void ResumeAll() => throw new NotSupportedException("This audio player does not support resuming playback.");
     }
 }
